@@ -32,60 +32,56 @@ const send = msg =>
 const playerCount = () =>
 	new Promise((resolve, reject) => {
 		setTimeout(reject, 3000);
-		return reader.once('online_count', count =>
+		return reader.once('players_count', count =>
 			resolve([ count.current, count.max ]));
 	});
 
 const playersOnline = () =>
 	new Promise((resolve, reject) => {
 		setTimeout(reject, 3000);
-		return reader.once('online_players', players =>
+		return reader.once('players_online', players =>
 			resolve(players.players.split(/\s*,\s*/)));
 	});
 
-reader.on('user_message', msg =>
-	send(code(msg.user) + ' ' + escape(msg.message)));
+reader.on('user', msg =>
+	send(code(msg.user) + ' ' + escape(msg.text)));
 
-reader.on('user_self_message', msg =>
-	send(code('* ' + msg.user + ' ' + msg.message)));
+reader.on('self', msg =>
+	send(code('* ' + msg.user + ' ' + msg.text)));
 
-reader.on('server_message', msg =>
-	send(code(msg.user + ': ' + msg.message)));
+reader.on('say', msg =>
+	send(code(msg.user + ': ' + msg.text)));
 
-reader.on('join_message', msg =>
+reader.on('join', msg =>
 	send(code(msg.user + ' joined the server')));
 
-reader.on('leave_message', msg =>
+reader.on('leave', msg =>
 	send(code(msg.user + ' left the server')));
 
-reader.on('death_message', msg =>
-	send(code(msg.user + ' ' + msg.message)));
+reader.on('death', msg =>
+	send(code(msg.user + ' ' + msg.text)));
 
-reader.on('advancement_message', msg =>
+reader.on('advancement', msg =>
 	send(
 		code(msg.user) +
 		' has made the advancement ' +
 		code('[' + msg.advancement + ']')));
 
-reader.on('goal_message', msg =>
+reader.on('goal', msg =>
 	send(
 		code(msg.user) +
 		' has reached the goal ' +
 		code('[' + msg.goal + ']')));
 
-reader.on('challenge_message', msg =>
+reader.on('challenge', msg =>
 	send(
 		code(msg.user) +
 		' has completed the challenge ' +
 		code('[' + msg.challenge + ']')));
 
-reader.on('keeping_entity_message', msg =>
+reader.on('entity', msg =>
 	msg.mob === 'chicken' &&
 		server.write('kill ' + msg.uuid + '\n'));
-
-const debugLog = type => message => console.log(type + ':', message);
-
-reader.on('keeping_entity_message', debugLog('keeping_entity_message'));
 
 reader.on('close', () =>
 	bot.stop());
