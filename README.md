@@ -10,8 +10,6 @@ PORT: The TCP-port to connect to
 
 HOST: The TCP-IP to connect to
 
-SERVER_PATH: The path to the server directory
-
 TELEGRAM_CHAT: The Telegram chat ID to relay messages to / from
 
 TELEGRAM_BOT_TOKEN: The token for the Telegram bot
