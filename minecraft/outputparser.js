@@ -5,14 +5,15 @@ const { readdirSync } = require('fs');
 const { createInterface } = require('readline');
 
 const head = require('ramda/src/head');
+const map = require('ramda/src/map');
 const mapObjIndexed = require('ramda/src/mapObjIndexed');
 
 const prefix = require('./regexps/prefix');
-const messages = readdirSync('./regexps/messages')
+const messages = readdirSync(join(__dirname, '/regexps/messages'))
 	.reduce((result, file) => ({
 		...result,
 		// eslint-disable-next-line global-require
-		[file]: require(join('./regexps/messages', file))
+		[file]: require(join(__dirname, '/regexps/messages', file))
 	}));
 
 const Reader = stream => {
@@ -24,13 +25,13 @@ const Reader = stream => {
 	}), messages);
 
 	rl.on('line', line =>
-		handlers.forEach(handler => {
+		map(handler => {
 			const result = handler.regexp.exec(line);
 			return result && rl.emit(handler.type, {
 				...result.groups,
 				type: handler.type
 			});
-		}));
+		}, handlers));
 
 	return rl;
 };

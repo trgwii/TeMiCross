@@ -1,6 +1,6 @@
 'use strict';
 
-const username = require('./username');
+const username = require('../username');
 
 module.exports =
 	'(?<players>(' +
