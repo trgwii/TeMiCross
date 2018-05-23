@@ -10,7 +10,8 @@ const messageJSON = require('./minecraft/messageJSON');
 
 const {
 	code,
-	escape
+	escape,
+	logError
 } = require('./utils');
 
 const tgID = process.env.TELEGRAM_CHAT;
@@ -144,7 +145,6 @@ bot.on('text', ctx =>
 					: undefined
 		)) + '\n'));
 
-bot.catch(err =>
-	console.error(err.name + ': ' + err.message + '\n' + err.stack));
+bot.catch(logError);
 
 bot.startPolling();
