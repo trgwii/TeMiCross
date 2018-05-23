@@ -6,10 +6,11 @@ const Telegraf = require('telegraf');
 
 const Reader = require('./minecraft/outputparser');
 
+const messageJSON = require('./minecraft/messageJSON');
+
 const {
 	code,
-	escape,
-	messageJSON
+	escape
 } = require('./utils');
 
 const tgID = process.env.TELEGRAM_CHAT;
@@ -78,11 +79,9 @@ reader.on('challenge_message', msg =>
 		' has completed the challenge ' +
 		code('[' + msg.challenge + ']')));
 
-reader.on('keeping_entity_message', msg => {
-	if (msg.mob === 'chicken') {
-		server.write('kill ' + msg.uuid + '\n');
-	}
-});
+reader.on('keeping_entity_message', msg =>
+	msg.mob === 'chicken' &&
+		server.write('kill ' + msg.uuid + '\n'));
 
 const debugLog = type => message => console.log(type + ':', message);
 
