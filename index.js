@@ -2,6 +2,7 @@
 
 const { connect } = require('net');
 
+const R = require('ramda');
 const Telegraf = require('telegraf');
 
 const Reader = require('./minecraft/outputparser');
@@ -15,12 +16,14 @@ const {
 } = require('./utils');
 
 const tgID = process.env.TELEGRAM_CHAT;
+const botID = process.env.TELEGRAM_BOT_ID;
 const tgOpts = { parse_mode: 'HTML' };
 
 const server = connect(Number(process.env.PORT), process.env.HOST);
 
 const reader = Reader(server);
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+bot.options.id = botID;
 
 bot.telegram.getMe().then(info => Object.assign(bot.options, info));
 
@@ -112,38 +115,90 @@ bot.command('list', ctx => {
 
 /* eslint-disable no-nested-ternary */
 
-const first = x => x && x[0];
+const id = R.prop('id');
+const chat = R.prop('chat');
+const from = R.prop('from');
+const text = R.prop('text');
+const message = R.prop('message');
+const lastName = R.prop('last_name');
+const firstName = R.prop('first_name');
+const reply = R.prop('reply_to_message');
 
-bot.on('text', ctx =>
-	String(ctx.chat.id) === tgID && server.write(
-		'tellraw @a ' + JSON.stringify(messageJSON(
-			ctx.from.id !== bot.options.id,
-			ctx.from.id === bot.options.id
-				? first(ctx.message.text.match(/^\w+/))
-				: ctx.from.first_name,
-			ctx.message.text,
-			ctx.message.reply_to_message &&
-				ctx.message.reply_to_message.text &&
-				ctx.message.reply_to_message.from.id !== bot.options.id,
-			ctx.message.reply_to_message &&
-				ctx.message.reply_to_message.text &&
-				ctx.message.reply_to_message.from.id !== bot.options.id
-				? ctx.message.reply_to_message.from.first_name
-				: ctx.message.reply_to_message
-					? first((ctx.message.reply_to_message.text || '')
-						.match(/^\w+/))
-					: undefined,
-			ctx.message.reply_to_message &&
-				ctx.message.reply_to_message.text &&
-				ctx.message.reply_to_message.from.id !== bot.options.id
-				? ctx.message.reply_to_message.text
-				: ctx.message.reply_to_message
-					? (ctx.message.reply_to_message.text || '')
-						.split(' ')
-						.slice(1)
-						.join(' ')
-					: undefined
-		)) + '\n'));
+const chatID = R.o(id, chat);
+const fromID = R.o(id, from);
+const fromLastName = R.o(lastName, from);
+const fromFirstName = R.o(firstName, from);
+
+const fromName = R.ifElse(
+	fromLastName,
+	R.compose(
+		R.join(' '),
+		R.converge(
+			R.pair,
+			[ fromFirstName, fromLastName ])),
+	fromFirstName);
+
+const removeMinecraftName = R.compose(
+	R.join(' '),
+	R.tail,
+	R.split(' '));
+
+const ctxArg = R.nthArg(0);
+const nextArg = R.nthArg(1);
+
+const telegram = R.compose(
+	R.not,
+	R.equals(botID),
+	fromID,
+	message,
+	ctxArg);
+
+const fromUser = R.ifElse(
+	telegram,
+	R.compose(fromName, message, ctxArg),
+	R.compose(removeMinecraftName, text, message, ctxArg));
+
+const handler = R.ifElse(
+	R.compose(
+		R.equals(tgID),
+		String,
+		chatID,
+		message,
+		ctxArg),
+	R.compose(
+		R.bind(server.write, server),
+		R.concat(R.__, '\n'),
+		R.concat('tellraw @a '),
+		JSON.stringify,
+		R.converge((...args) => {
+			console.log(args);
+			return messageJSON(...args);
+		}, [
+			telegram,
+			fromUser,
+			R.compose(text, message),
+			R.ifElse(
+				R.compose(reply, message),
+				R.always('Reply'),
+				R.F),
+			R.compose(telegram, reply, message),
+			R.ifElse(
+				R.compose(reply, message),
+				R.compose(fromName, message, ctxArg),
+				R.compose(removeMinecraftName, text, message, ctxArg)),
+			R.compose(text, reply, message)
+		])),
+	R.compose(
+		R.call,
+		nextArg));
+
+bot.on(
+	[ 'message', 'edited_message' ],
+	handler);
+
+bot.on(
+	[ 'message', 'edited_message' ],
+	() => console.log('bottom'));
 
 bot.catch(logError);
 

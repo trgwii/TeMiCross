@@ -31,10 +31,10 @@ const userJSON = ifElse(
 		assoc('text', __, { color: 'white' })),
 	of);
 
-const replyUserJSON = (name, telegram, text) => [
+const hoverUserJSON = (hoverText, telegram, name, text) => [
 	' (',
 	{
-		text: 'Reply',
+		text: hoverText,
 		color: 'yellow',
 		hoverEvent: {
 			action: 'show_text',
@@ -57,10 +57,11 @@ const fromJSON = (name, telegram, reply) => [
 
 
 const messageJSON = (telegram, from, text,
-	replyUserTelegram, replyUser, replyText) => [
+	hoverType,
+	hoverUserTelegram, hoverUser, hoverText) => [
 	...fromJSON(from, telegram,
-		replyUser
-			? replyUserJSON(replyUser, replyUserTelegram, replyText)
+		hoverUser
+			? hoverUserJSON(hoverType, hoverUserTelegram, hoverUser, hoverText)
 			: undefined),
 	// ...replyText ? replyTextJSON(replyText) : [],
 	textJSON(text)
