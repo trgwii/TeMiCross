@@ -143,37 +143,31 @@ const removeMinecraftName = R.compose(
 	R.tail,
 	R.split(' '));
 
-const ctxArg = R.nthArg(0);
 const nextArg = R.nthArg(1);
 
 const telegram = R.compose(
 	R.not,
 	R.equals(botID),
 	fromID,
-	message,
-	ctxArg);
+	message);
 
 const fromUser = R.ifElse(
 	telegram,
-	R.compose(fromName, message, ctxArg),
-	R.compose(removeMinecraftName, text, message, ctxArg));
+	R.compose(fromName, message),
+	R.compose(removeMinecraftName, text, message));
 
 const handler = R.ifElse(
 	R.compose(
 		R.equals(tgID),
 		String,
 		chatID,
-		message,
-		ctxArg),
+		message),
 	R.compose(
 		R.bind(server.write, server),
 		R.concat(R.__, '\n'),
 		R.concat('tellraw @a '),
 		JSON.stringify,
-		R.converge((...args) => {
-			console.log(args);
-			return messageJSON(...args);
-		}, [
+		R.converge(messageJSON, [
 			telegram,
 			fromUser,
 			R.compose(text, message),
@@ -184,8 +178,8 @@ const handler = R.ifElse(
 			R.compose(telegram, reply, message),
 			R.ifElse(
 				R.compose(reply, message),
-				R.compose(fromName, message, ctxArg),
-				R.compose(removeMinecraftName, text, message, ctxArg)),
+				R.compose(fromName, reply, message),
+				R.compose(removeMinecraftName, text, reply, message)),
 			R.compose(text, reply, message)
 		])),
 	R.compose(
