@@ -138,7 +138,11 @@ const fromName = R.ifElse(
 			[ fromFirstName, fromLastName ])),
 	fromFirstName);
 
-const removeMinecraftName = R.compose(
+const minecraftUsername = R.compose(
+	R.head,
+	R.split(' '));
+
+const removeMinecraftUsername = R.compose(
 	R.join(' '),
 	R.tail,
 	R.split(' '));
@@ -148,13 +152,13 @@ const nextArg = R.nthArg(1);
 const telegram = R.compose(
 	R.not,
 	R.equals(botID),
-	fromID,
-	message);
+	String,
+	fromID);
 
 const fromUser = R.ifElse(
 	telegram,
 	R.compose(fromName, message),
-	R.compose(removeMinecraftName, text, message));
+	R.compose(minecraftUsername, text, message));
 
 const handler = R.ifElse(
 	R.compose(
@@ -168,19 +172,37 @@ const handler = R.ifElse(
 		R.concat('tellraw @a '),
 		JSON.stringify,
 		R.converge(messageJSON, [
-			telegram,
+			// telegram
+			R.o(telegram, message),
+			// from
 			fromUser,
+			// text
 			R.compose(text, message),
+			// hoverType
 			R.ifElse(
 				R.compose(reply, message),
 				R.always('Reply'),
-				R.F),
+				R.always(undefined)),
+			// hoverUserTelegram
 			R.compose(telegram, reply, message),
+			// hoverUser
 			R.ifElse(
 				R.compose(reply, message),
-				R.compose(fromName, reply, message),
-				R.compose(removeMinecraftName, text, reply, message)),
-			R.compose(text, reply, message)
+				R.ifElse(
+					R.compose(
+						R.equals(botID),
+						String,
+						fromID,
+						reply,
+						message),
+					R.compose(minecraftUsername, text, reply, message),
+					R.compose(fromName, reply, message)),
+				R.always(undefined)),
+			// hoverText
+			R.ifElse(
+				R.compose(telegram, reply, message),
+				R.compose(text, reply, message),
+				R.compose(removeMinecraftUsername, text, reply, message))
 		])),
 	R.compose(
 		R.call,
