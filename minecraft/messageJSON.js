@@ -7,12 +7,26 @@ const assoc = require('ramda/src/assoc');
 const compose = require('ramda/src/compose');
 const concat = require('ramda/src/concat');
 const flip = require('ramda/src/flip');
+const identity = require('ramda/src/identity');
 const ifElse = require('ramda/src/ifElse');
+const intersperse = require('ramda/src/intersperse');
+const map = require('ramda/src/map');
 const nthArg = require('ramda/src/nthArg');
 const of = require('ramda/src/of');
 const replace = require('ramda/src/replace');
+const split = require('ramda/src/split');
+const startsWith = require('ramda/src/startsWith');
+const trim = require('ramda/src/trim');
 
-const textJSON = replace(/\n/g, '\n ');
+const textJSON = compose(
+	intersperse('\n'),
+	map(ifElse(
+		compose(startsWith('>'), trim),
+		assoc('text', __, { color: 'green' }),
+		identity
+	)),
+	split('\n'),
+	replace(/\n/g, '\n '));
 
 // eslint-disable-next-line no-unused-vars
 const replyTextJSON = compose(
@@ -41,7 +55,8 @@ const hoverUserJSON = (hoverText, telegram, name, text) => [
 			value: [
 				{ text: '<', color: 'white' },
 				...userJSON(name, telegram),
-				{ text: '> ' + text, color: 'white' }
+				{ text: '> ', color: 'white' },
+				...textJSON(text)
 			]
 		}
 	},
@@ -64,7 +79,7 @@ const messageJSON = (telegram, from, text,
 			? hoverUserJSON(hoverType, hoverUserTelegram, hoverUser, hoverText)
 			: undefined),
 	// ...replyText ? replyTextJSON(replyText) : [],
-	textJSON(text)
+	...textJSON(text)
 ];
 
 module.exports = messageJSON;

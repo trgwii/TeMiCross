@@ -19,6 +19,23 @@ const tgID = process.env.TELEGRAM_CHAT;
 const botID = process.env.TELEGRAM_BOT_ID;
 const tgOpts = { parse_mode: 'HTML' };
 
+const splitSpace = R.split(' ');
+const joinSpace = R.join(' ');
+
+const id = R.prop('id');
+const chat = R.prop('chat');
+const from = R.prop('from');
+const text = R.prop('text');
+const message = R.prop('message');
+const lastName = R.prop('last_name');
+const firstName = R.prop('first_name');
+const reply = R.prop('reply_to_message');
+
+const chatID = R.o(id, chat);
+const fromID = R.o(id, from);
+const fromLastName = R.o(lastName, from);
+const fromFirstName = R.o(firstName, from);
+
 const server = connect(Number(process.env.PORT), process.env.HOST);
 
 const reader = Reader(server);
@@ -93,6 +110,15 @@ reader.on('close', () =>
 bot.command('chatid', ctx =>
 	ctx.reply(ctx.chat.id));
 
+/* below code needs testing
+
+bot.command('chatid', R.converge(R.invoker(2, 'reply'), [
+	chatID,
+	R.identity
+]));
+
+ end of block */
+
 bot.command('list', ctx => {
 	const count = playerCount();
 	const online = playersOnline();
@@ -113,39 +139,23 @@ bot.command('list', ctx => {
 		});
 });
 
-/* eslint-disable no-nested-ternary */
-
-const id = R.prop('id');
-const chat = R.prop('chat');
-const from = R.prop('from');
-const text = R.prop('text');
-const message = R.prop('message');
-const lastName = R.prop('last_name');
-const firstName = R.prop('first_name');
-const reply = R.prop('reply_to_message');
-
-const chatID = R.o(id, chat);
-const fromID = R.o(id, from);
-const fromLastName = R.o(lastName, from);
-const fromFirstName = R.o(firstName, from);
-
 const fromName = R.ifElse(
 	fromLastName,
-	R.compose(
-		R.join(' '),
+	R.o(
+		joinSpace,
 		R.converge(
 			R.pair,
 			[ fromFirstName, fromLastName ])),
 	fromFirstName);
 
-const minecraftUsername = R.compose(
+const minecraftUsername = R.o(
 	R.head,
-	R.split(' '));
+	splitSpace);
 
 const removeMinecraftUsername = R.compose(
-	R.join(' '),
+	joinSpace,
 	R.tail,
-	R.split(' '));
+	splitSpace);
 
 const nextArg = R.nthArg(1);
 
@@ -157,7 +167,7 @@ const telegram = R.compose(
 
 const fromUser = R.ifElse(
 	telegram,
-	R.compose(fromName, message),
+	R.o(fromName, message),
 	R.compose(minecraftUsername, text, message));
 
 const handler = R.ifElse(
@@ -168,6 +178,7 @@ const handler = R.ifElse(
 		message),
 	R.compose(
 		R.bind(server.write, server),
+		// eslint-disable-next-line no-underscore-dangle
 		R.concat(R.__, '\n'),
 		R.concat('tellraw @a '),
 		JSON.stringify,
@@ -177,17 +188,17 @@ const handler = R.ifElse(
 			// from
 			fromUser,
 			// text
-			R.compose(text, message),
+			R.o(text, message),
 			// hoverType
 			R.ifElse(
-				R.compose(reply, message),
+				R.o(reply, message),
 				R.always('Reply'),
 				R.always(undefined)),
 			// hoverUserTelegram
 			R.compose(telegram, reply, message),
 			// hoverUser
 			R.ifElse(
-				R.compose(reply, message),
+				R.o(reply, message),
 				R.ifElse(
 					R.compose(
 						R.equals(botID),
@@ -204,17 +215,13 @@ const handler = R.ifElse(
 				R.compose(text, reply, message),
 				R.compose(removeMinecraftUsername, text, reply, message))
 		])),
-	R.compose(
+	R.o(
 		R.call,
 		nextArg));
 
 bot.on(
 	[ 'message', 'edited_message' ],
 	handler);
-
-bot.on(
-	[ 'message', 'edited_message' ],
-	() => console.log('bottom'));
 
 bot.catch(logError);
 
