@@ -16,7 +16,7 @@ const {
 } = require('./utils');
 
 const tgID = process.env.TELEGRAM_CHAT;
-const botID = process.env.TELEGRAM_BOT_ID;
+const botID = R.head(R.split(':', process.env.TELEGRAM_BOT_TOKEN));
 const tgOpts = { parse_mode: 'HTML' };
 
 const splitSpace = R.split(' ');
@@ -44,9 +44,6 @@ bot.options.id = botID;
 
 bot.telegram.getMe().then(info => Object.assign(bot.options, info));
 
-process.stdin.pipe(server);
-server.pipe(process.stdout);
-
 const send = msg =>
 	bot.telegram.sendMessage(tgID, msg, tgOpts);
 
@@ -54,14 +51,11 @@ const playerCount = () =>
 	new Promise((resolve, reject) => {
 		setTimeout(reject, 3000);
 		return reader.once('players_count', count =>
-			resolve([ count.current, count.max ]));
-	});
-
-const playersOnline = () =>
-	new Promise((resolve, reject) => {
-		setTimeout(reject, 3000);
-		return reader.once('players_online', players =>
-			resolve(players.players.split(/\s*,\s*/)));
+			resolve([
+				count.current,
+				count.max,
+				count.players.split(/\s*,\s*/)
+			]));
 	});
 
 reader.on('user', msg =>
@@ -100,9 +94,11 @@ reader.on('challenge', msg =>
 		' has completed the challenge ' +
 		code('[' + msg.challenge + ']')));
 
-reader.on('entity', msg =>
-	msg.mob === 'chicken' &&
-		server.write('kill ' + msg.uuid + '\n'));
+if (process.env.KILL_CHICKENS) {
+	reader.on('entity', msg =>
+		msg.mob === 'chicken' &&
+			server.write('kill ' + msg.uuid + '\n'));
+}
 
 reader.on('close', () =>
 	bot.stop());
@@ -110,24 +106,10 @@ reader.on('close', () =>
 bot.command('chatid', ctx =>
 	ctx.reply(ctx.chat.id));
 
-/* below code needs testing
-
-bot.command('chatid', R.converge(R.invoker(2, 'reply'), [
-	chatID,
-	R.identity
-]));
-
- end of block */
-
 bot.command('list', ctx => {
-	const count = playerCount();
-	const online = playersOnline();
 	server.write('list\n');
-	return Promise.all([
-		count,
-		online
-	])
-		.then(([ [ current, max ], players ]) => ctx.reply(
+	return playerCount()
+		.then(([ current, max, players ]) => ctx.reply(
 			'Players online ' +
 			'(' + code(current) + '/' + code(max) + '):\n' +
 			code(players.join('\n')), tgOpts))

@@ -1,3 +1,7 @@
 'use strict';
 
-module.exports = 'There are (?<current>\\d+)/(?<max>\\d+) players online:';
+const players = require('./players_online');
+
+module.exports =
+	'There are (?<current>\\d+) of a max (?<max>\\d+) players online: ' +
+	players;
