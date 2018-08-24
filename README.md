@@ -49,23 +49,25 @@ TELEGRAM_BOT_TOKEN: The token for the Telegram bot
 	# Enter the Telegram Chat ID you want to
 	# bridge the Minecraft server to:
 	# (remember it starts with "-" for supergroups)
-	export TELEGRAM_CHAT=
+	TELEGRAM_CHAT=
 
 	# Enter the Telegram bot token you
 	# got from @BotFather
-	export TELEGRAM_BOT_TOKEN=
+	TELEGRAM_BOT_TOKEN=
 
 	# Enter the same PORT value you
 	# entered in Setup Part 1:
 	# (Probably 12345)
-	export PORT=
+	PORT=
 
 	# If you entered an IP in Part 1,
 	# enter an IP or hostname that
 	# reaches that port here
 	# (Or enter 127.0.0.1 if both
 	# are running on the same machine)
-	export HOST=
+	HOST=
+
+	export TELEGRAM_CHAT TELEGRAM_BOT_TOKEN PORT HOST
 
 	node .
 	```
