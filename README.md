@@ -4,6 +4,10 @@ This is a Minecraft-to-Telegram chat bridge
 
 [To be used with this TCP-wrapper for the server](https://gist.github.com/trgwii/4db704f75b0a701b92cac25cb5164b14)
 
+## Spigot
+
+If you're using spigot, use [the spigot branch](https://github.com/trgwii/TeMiCross/tree/spigot)
+
 ## Environment variables
 
 PORT: The TCP-port to connect to
