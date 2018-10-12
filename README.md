@@ -23,6 +23,7 @@ TELEGRAM_BOT_TOKEN: The token for the Telegram bot
 1. Install [Node.js](https://nodejs.org/)
 1. Navigate to your Minecraft server directory
 1. Download [server.js](https://gist.githubusercontent.com/trgwii/4db704f75b0a701b92cac25cb5164b14/raw/539a899285c7bf48500870e968fdb47d1e4701b7/server.js) and place it there
+1. `cd` to your Minecraft server directory
 1. Run `npm i iconv-lite`
 1.
 	* Linux: put the following into a run_minecraft_server.sh file:
@@ -45,6 +46,7 @@ TELEGRAM_BOT_TOKEN: The token for the Telegram bot
 ## Setup: Part 2 (The Telegram bot bridge)
 
 1. Clone or download this repo into a folder.
+1. `cd` into that folder.
 1. Run `npm i`
 1. Get a bot token from [@BotFather](https://t.me/BotFather)
 1.
