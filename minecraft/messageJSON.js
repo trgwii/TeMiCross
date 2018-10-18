@@ -27,7 +27,7 @@ const textJSON = when(
 		map(ifElse(
 			compose(startsWith('>'), trim),
 			assoc('text', __, { color: 'green' }),
-			identity
+			assoc('text', __, { color: 'white' })
 		)),
 		split('\n'),
 		replace(/\n/g, '\n ')));
