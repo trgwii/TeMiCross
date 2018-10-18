@@ -7,7 +7,10 @@ const Telegraf = require('telegraf');
 
 const Reader = require('./minecraft/outputparser');
 
-const messageJSON = require('./minecraft/messageJSON');
+const {
+	messageJSON,
+	textJSON
+} = require('./minecraft/messageJSON');
 
 const {
 	code,
@@ -152,6 +155,23 @@ const fromUser = R.ifElse(
 	R.o(fromName, message),
 	R.compose(minecraftUsername, text, message));
 
+
+const captionMedia = (name, fn) => R.ifElse(
+	R.compose(R.prop('caption'), fn),
+	R.compose(
+		R.insert(3, R.__, [
+			{ text: '[', color: 'white' },
+			{ text: name, color: 'gray' },
+			{ text: '] ', color: 'white' }
+		]),
+		textJSON,
+		R.compose(R.prop('caption'), fn)),
+	R.always([
+		{ text: '[', color: 'white' },
+		{ text: name, color: 'gray' },
+		{ text: ']', color: 'white' }
+	]));
+
 const handler = R.ifElse(
 	R.compose(
 		R.equals(tgID),
@@ -170,7 +190,30 @@ const handler = R.ifElse(
 			// from
 			fromUser,
 			// text
-			R.o(text, message),
+			R.cond([
+				[ R.compose(text, message),
+					R.compose(text, message) ],
+				[ R.compose(R.prop('audio'), message),
+					captionMedia('AUDIO', message) ],
+				[ R.compose(R.prop('document'), message),
+					captionMedia('DOCUMENT', message) ],
+				[ R.compose(R.prop('photo'), message),
+					captionMedia('IMAGE', message) ],
+				[ R.compose(R.prop('sticker'), message),
+					captionMedia('STICKER', message) ],
+				[ R.compose(R.prop('video'), message),
+					captionMedia('VIDEO', message) ],
+				[ R.compose(R.prop('voice'), message),
+					captionMedia('VOICE', message) ],
+				[ R.compose(R.prop('contact'), message),
+					captionMedia('CONTACT', message) ],
+				[ R.compose(R.prop('location'), message),
+					captionMedia('LOCATION', message) ],
+				[ R.compose(R.prop('game'), message),
+					captionMedia('GAME', message) ],
+				[ R.compose(R.prop('video_note'), message),
+					captionMedia('VIDEO NOTE', message) ]
+			]),
 			// hoverType
 			R.ifElse(
 				R.o(reply, message),
@@ -194,16 +237,49 @@ const handler = R.ifElse(
 			// hoverText
 			R.ifElse(
 				R.compose(telegram, reply, message),
-				R.compose(text, reply, message),
+				R.cond([
+					[ R.compose(text, reply, message),
+						R.compose(text, reply, message) ],
+					[ R.compose(R.prop('audio'), reply, message),
+						captionMedia('AUDIO', R.compose(reply, message)) ],
+					[ R.compose(R.prop('document'), reply, message),
+						captionMedia('DOCUMENT', R.compose(reply, message)) ],
+					[ R.compose(R.prop('photo'), reply, message),
+						captionMedia('IMAGE', R.compose(reply, message)) ],
+					[ R.compose(R.prop('sticker'), reply, message),
+						captionMedia('STICKER', R.compose(reply, message)) ],
+					[ R.compose(R.prop('video'), reply, message),
+						captionMedia('VIDEO', R.compose(reply, message)) ],
+					[ R.compose(R.prop('voice'), reply, message),
+						captionMedia('VOICE', R.compose(reply, message)) ],
+					[ R.compose(R.prop('contact'), reply, message),
+						captionMedia('CONTACT', R.compose(reply, message)) ],
+					[ R.compose(R.prop('location'), reply, message),
+						captionMedia('LOCATION', R.compose(reply, message)) ],
+					[ R.compose(R.prop('game'), reply, message),
+						captionMedia('GAME', R.compose(reply, message)) ],
+					[ R.compose(R.prop('video_note'), reply, message),
+						captionMedia('VIDEO NOTE', R.compose(reply, message)) ]
+				]),
 				R.compose(removeMinecraftUsername, text, reply, message))
 		])),
 	R.o(
 		R.call,
 		nextArg));
 
-bot.on(
-	[ 'message', 'edited_message' ],
-	handler);
+bot.on([
+	'text',
+	'audio',
+	'document',
+	'photo',
+	'sticker',
+	'video',
+	'voice',
+	'contact',
+	'location',
+	'game',
+	'video_note'
+], handler);
 
 bot.catch(logError);
 

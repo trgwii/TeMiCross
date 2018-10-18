@@ -10,6 +10,7 @@ const flip = require('ramda/src/flip');
 const identity = require('ramda/src/identity');
 const ifElse = require('ramda/src/ifElse');
 const intersperse = require('ramda/src/intersperse');
+const is = require('ramda/src/is');
 const map = require('ramda/src/map');
 const nthArg = require('ramda/src/nthArg');
 const of = require('ramda/src/of');
@@ -17,16 +18,19 @@ const replace = require('ramda/src/replace');
 const split = require('ramda/src/split');
 const startsWith = require('ramda/src/startsWith');
 const trim = require('ramda/src/trim');
+const when = require('ramda/src/when');
 
-const textJSON = compose(
-	intersperse('\n'),
-	map(ifElse(
-		compose(startsWith('>'), trim),
-		assoc('text', __, { color: 'green' }),
-		identity
-	)),
-	split('\n'),
-	replace(/\n/g, '\n '));
+const textJSON = when(
+	is(String),
+	compose(
+		intersperse('\n'),
+		map(ifElse(
+			compose(startsWith('>'), trim),
+			assoc('text', __, { color: 'green' }),
+			identity
+		)),
+		split('\n'),
+		replace(/\n/g, '\n ')));
 
 // eslint-disable-next-line no-unused-vars
 const replyTextJSON = compose(
@@ -82,4 +86,7 @@ const messageJSON = (telegram, from, text,
 	...textJSON(text)
 ];
 
-module.exports = messageJSON;
+module.exports = {
+	textJSON,
+	messageJSON
+};
