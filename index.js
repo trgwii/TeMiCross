@@ -25,14 +25,25 @@ const tgOpts = { parse_mode: 'HTML' };
 const splitSpace = R.split(' ');
 const joinSpace = R.join(' ');
 
-const id = R.prop('id');
-const chat = R.prop('chat');
-const from = R.prop('from');
-const text = R.prop('text');
-const message = R.prop('message');
-const lastName = R.prop('last_name');
-const firstName = R.prop('first_name');
-const reply = R.prop('reply_to_message');
+const [
+	id,
+	chat,
+	from,
+	text,
+	message,
+	lastName,
+	firstName,
+	reply
+] = R.map(R.prop, [
+	'id',
+	'chat',
+	'from',
+	'text',
+	'message',
+	'last_name',
+	'first_name',
+	'reply_to_message'
+]);
 
 const chatID = R.o(id, chat);
 const fromID = R.o(id, from);
