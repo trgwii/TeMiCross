@@ -19,7 +19,8 @@ const load = compose(
 const escape = compose(
 	replace(/>/g, '&gt;'),
 	replace(/</g, '&lt;'),
-	replace(/&/g, '&amp;'));
+	replace(/&/g, '&amp;'),
+	String);
 
 const code = compose(
 	concat(__, '</code>'),

@@ -8,15 +8,19 @@ const head = require('ramda/src/head');
 const map = require('ramda/src/map');
 const mapObjIndexed = require('ramda/src/mapObjIndexed');
 
-const prefix = require('./regexps/prefix');
-const messages = readdirSync(join(__dirname, '/regexps/messages'))
-	.reduce((result, file) => ({
-		...result,
-		// eslint-disable-next-line global-require
-		[file]: require(join(__dirname, '/regexps/messages', file))
-	}));
+const getMessages = type => ({
+	// eslint-disable-next-line global-require
+	prefix: require(`./${type}/prefix`),
+	messages: readdirSync(join(__dirname, `/${type}/messages`))
+		.reduce((result, file) => ({
+			...result,
+			// eslint-disable-next-line global-require
+			[file]: require(join(__dirname, `/${type}/messages`, file))
+		}))
+});
 
-const Reader = stream => {
+const Parser = (type, stream) => {
+	const { prefix, messages } = getMessages(type);
 	const rl = createInterface({ input: stream });
 
 	const handlers = mapObjIndexed((regexp, file) => ({
@@ -36,4 +40,4 @@ const Reader = stream => {
 	return rl;
 };
 
-module.exports = Reader;
+module.exports = Parser;

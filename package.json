@@ -1,8 +1,12 @@
 {
   "name": "temicross",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "description": "Telegram - Minecraft chat bridge",
   "main": "index.js",
+  "bin": {
+    "temicross": "./cli/index.js",
+    "tmc": "./cli/index.js"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,8 +19,10 @@
   "author": "Thomas Rory Gummerson <thomas@gummerson.no> (https://trgwii.no)",
   "license": "Beerware",
   "dependencies": {
+    "bracket-split": "^1.1.4",
     "iconv-lite": "^0.4.24",
-    "ramda": "^0.25.0",
-    "telegraf": "^3.24.1"
+    "inquirer": "^6.2.2",
+    "ramda": "^0.26.1",
+    "telegraf": "^3.27.0"
   }
 }

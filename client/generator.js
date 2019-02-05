@@ -7,7 +7,6 @@ const assoc = require('ramda/src/assoc');
 const compose = require('ramda/src/compose');
 const concat = require('ramda/src/concat');
 const flip = require('ramda/src/flip');
-const identity = require('ramda/src/identity');
 const ifElse = require('ramda/src/ifElse');
 const intersperse = require('ramda/src/intersperse');
 const is = require('ramda/src/is');
@@ -79,9 +78,8 @@ const messageJSON = (telegram, from, text,
 	hoverType,
 	hoverUserTelegram, hoverUser, hoverText) => [
 	...fromJSON(from, telegram,
-		hoverUser
-			? hoverUserJSON(hoverType, hoverUserTelegram, hoverUser, hoverText)
-			: undefined),
+		hoverUser &&
+			hoverUserJSON(hoverType, hoverUserTelegram, hoverUser, hoverText)),
 	// ...replyText ? replyTextJSON(replyText) : [],
 	...textJSON(text)
 ];
