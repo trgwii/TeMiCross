@@ -28,5 +28,14 @@ if (plugins[command]) {
 		.then(settings =>
 			plugin.run({ ...settings, interactive: true }));
 }
+
+const helpText = `Possible arguments:
+${Object.keys(plugins).map(x => `\t${x}`).join('\n')}
+`;
+
+if (!command || command.length === 0) {
+	return console.log(helpText);
+}
 // eslint-disable-next-line no-console
+process.exitCode = 1;
 return console.error('Unknown command: ' + command);
