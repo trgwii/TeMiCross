@@ -11,7 +11,7 @@ const configure = [
 		default: 12345,
 		validate: x =>
 			Number.isInteger(Number(x)),
-		filter: x => Number(x.trim())
+		filter: x => Number(String(x).trim())
 	},
 	{
 		type: 'input',
