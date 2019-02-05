@@ -14,7 +14,7 @@ const {
 	code,
 	escape,
 	logError
-} = require('../utils');
+} = require('./utils');
 
 const tgOpts = { parse_mode: 'HTML' };
 
