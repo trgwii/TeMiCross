@@ -75,9 +75,7 @@ const captionMedia = (name, fn) => R.ifElse(
 
 const run = opts => {
 
-	const { token, chatID: tgIDStr, allowList } = opts;
-
-	const tgID = Number(tgIDStr);
+	const { token, chatID: tgID, allowList } = opts;
 
 	const botID = R.head(R.split(':', token));
 

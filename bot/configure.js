@@ -9,7 +9,8 @@ const configure = [
 		message:
 			'Enter the bot token you obtained from BotFather on Telegram:',
 		validate: x => x.length > 10 && x.includes(':') ||
-			'That doesn\'t look like a valid token, try again please!'
+			'That doesn\'t look like a valid token, try again please!',
+		filter: x => x.trim()
 	},
 	{
 		type: 'input',
@@ -18,7 +19,8 @@ const configure = [
 			'Enter the Telegram chat ID you want to ' +
 			'forward messages from Minecraft to:',
 		validate: x =>
-			Number.isInteger(Number(x))
+			Number.isInteger(Number(x)),
+		filter: x => x.trim()
 	},
 	{
 		type: 'confirm',
