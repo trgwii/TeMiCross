@@ -27,6 +27,12 @@ const configure = [
 		name: 'allowList',
 		message: 'Allow /list on Telegram?'
 	},
+	{
+		type: 'confirm',
+		name: 'localAuth',
+		message: '(for cracked servers) Use local auth?',
+		default: false
+	},
 	...clientConfig
 ];
 

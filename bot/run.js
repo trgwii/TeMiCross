@@ -75,7 +75,7 @@ const captionMedia = (name, fn) => R.ifElse(
 
 const run = opts => {
 
-	const { token, chatID: tgID, allowList } = opts;
+	const { token, chatID: tgID, allowList, localAuth } = opts;
 
 	const botID = R.head(R.split(':', token));
 
@@ -90,14 +90,19 @@ const run = opts => {
 		bot.telegram.sendMessage(tgID, msg, tgOpts);
 
 	let maxPlayers = 0;
-	let players = [];
+	const players = [];
+
+	if (localAuth) {
+		// eslint-disable-next-line global-require
+		require('./auth')(bot, client);
+	}
 
 	const addPlayer = name => {
-		players = [ ...players.filter(x => x !== name), name ];
+		players.splice(0, Infinity, ...players.filter(x => x !== name), name);
 		return name;
 	};
 	const removePlayer = name => {
-		players = players.filter(x => x !== name);
+		players.splice(0, Infinity, players.filter(x => x !== name));
 		return name;
 	};
 
@@ -114,7 +119,7 @@ const run = opts => {
 				]));
 		}).then(([ , max, ps ]) => {
 			maxPlayers = max;
-			players = ps;
+			players.splice(0, Infinity, ...ps);
 		});
 	}
 
