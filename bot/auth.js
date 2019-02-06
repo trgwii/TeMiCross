@@ -46,10 +46,16 @@ const LocalAuth = (bot, client) => {
 	}, 500);
 
 	client.on('join', ({ user }) => {
-		players[user] = { authed: false };
-		bot.telegram.sendMessage(
-			linked[user],
-			'Type /auth to authenticate yourself');
+		players[user] = {
+			authed: false,
+			timeout: setTimeout(() =>
+				client.send(`kick ${user}`), 300000)
+		};
+		if (linked[user]) {
+			bot.telegram.sendMessage(
+				linked[user],
+				'Type /auth to authenticate yourself');
+		}
 	});
 
 	client.on('leave', ({ user }) => {
@@ -65,8 +71,13 @@ const LocalAuth = (bot, client) => {
 				if (pins[pin]) {
 					linked[user] = pins[pin];
 					save('auth', linked);
-					(players[user] || {}).authed = true;
-					unlimitPlayer(client, user);
+					const player = players[user];
+					if (player) {
+						player.authed = true;
+						clearTimeout(player.timeout);
+						unlimitPlayer(client, user);
+						client.send(`tellraw ${user} "Successfully linked with Telegram account!"`);
+					}
 				}
 			}
 		}
@@ -75,14 +86,29 @@ const LocalAuth = (bot, client) => {
 	bot.command('auth', ctx => {
 		const user = invertObj(linked)[ctx.from.id];
 		if (user) {
-			if (players[user]) {
-				players[user].authed = true;
+			const player = players[user];
+			if (player) {
+				player.authed = true;
+				clearTimeout(player.timeout);
 				unlimitPlayer(client, user);
 				return ctx.reply('You\'ve successfully authenticated yourself');
 			}
 			return ctx.reply('Log into the server first!');
 		}
 		return ctx.reply('Use /link first!');
+	});
+
+	bot.command('deauth', ctx => {
+		const user = invertObj(linked)[ctx.from.id];
+		if (user) {
+			players[user] = {
+				authed: false,
+				timeout: setTimeout(() =>
+					client.send(`kick ${user}`), 300000)
+			};
+			return ctx.reply('Deauthed yourself!');
+		}
+		return ctx.reply('Could not find you, did you /link ?');
 	});
 
 	bot.command('link', ctx => {
