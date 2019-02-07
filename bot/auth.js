@@ -46,6 +46,11 @@ const LocalAuth = (bot, client) => {
 	}, 500);
 
 	client.on('join', ({ user }) => {
+		const player = players[user];
+		if (player) {
+			clearTimeout(player.timeout);
+			delete players[user];
+		}
 		players[user] = {
 			authed: false,
 			timeout: setTimeout(() =>
@@ -59,7 +64,11 @@ const LocalAuth = (bot, client) => {
 	});
 
 	client.on('leave', ({ user }) => {
-		delete players[user];
+		const player = players[user];
+		if (player) {
+			clearTimeout(player.timeout);
+			delete players[user];
+		}
 	});
 
 	client.on('user', ({ user, text }) => {
@@ -101,10 +110,15 @@ const LocalAuth = (bot, client) => {
 	bot.command('deauth', ctx => {
 		const user = invertObj(linked)[ctx.from.id];
 		if (user) {
+			const player = players[user];
+			if (player) {
+				clearTimeout(player.timeout);
+				delete players[user];
+			}
 			players[user] = {
 				authed: false,
 				timeout: setTimeout(() =>
-					client.send(`kick ${user}`), 300000)
+					client.send(`kick ${user}`), 30000)
 			};
 			return ctx.reply('Deauthed yourself!');
 		}
