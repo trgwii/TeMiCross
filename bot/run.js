@@ -102,7 +102,7 @@ const run = opts => {
 		return name;
 	};
 	const removePlayer = name => {
-		players.splice(0, Infinity, players.filter(x => x !== name));
+		players.splice(0, Infinity, ...players.filter(x => x !== name));
 		return name;
 	};
 

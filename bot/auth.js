@@ -72,7 +72,6 @@ const LocalAuth = (bot, client) => {
 	});
 
 	client.on('user', ({ user, text }) => {
-		console.log(user, text);
 		if (text.startsWith('!')) {
 			const [ command, ...args ] = split(/\s+/, text.slice(1));
 			if (command === 'link') {
