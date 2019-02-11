@@ -3,6 +3,7 @@
 const { join } = require('path');
 const { readdirSync } = require('fs');
 const { createInterface } = require('readline');
+const parse = require('../dataparser');
 
 const head = require('ramda/src/head');
 const map = require('ramda/src/map');
@@ -31,6 +32,13 @@ const Parser = (type, stream) => {
 	rl.on('line', line =>
 		map(handler => {
 			const result = handler.regexp.exec(line);
+			if (handler.type === 'data') {
+				return result && rl.emit(handler.type, {
+					...result.groups,
+					data: parse(result.groups.data),
+					type: handler.type
+				});
+			}
 			return result && rl.emit(handler.type, {
 				...result.groups,
 				type: handler.type

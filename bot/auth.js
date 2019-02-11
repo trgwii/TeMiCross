@@ -18,16 +18,51 @@ const Pin = compose(
 	String,
 	Math.random);
 
-const limitPlayer = (client, user) => {
-	client.send(`gamemode adventure ${user}`);
+const gamemodes = [
+	'survival',
+	'creative',
+	'adventure',
+	'survival'
+];
+
+const limitPlayer = (client, user, player, timeout = 300000) => {
+
+	const gamemodeListener = ({ user: u, data }) => {
+		if (u === user && !Number.isNaN(data)) {
+			player.gamemode = gamemodes[data];
+			client.removeListener('data', gamemodeListener);
+		}
+	};
+	const positionListener = ({ user: u, data }) => {
+		if (u === user && Array.isArray(data)) {
+			player.position = data;
+			client.removeListener('data', positionListener);
+		}
+	};
+
+	player.kickTimeout = setTimeout(() =>
+		client.send(`kick ${user}`), timeout);
+	player.positionInterval = setInterval(() =>
+		player.position &&
+		client.send(`tp ${user} ${player.position.join(' ')}`), 400);
+
+	client.on('data', gamemodeListener);
+	client.on('data', positionListener);
+	client.send(`data get entity ${user} playerGameType`);
+	client.send(`data get entity ${user} Pos`);
+	client.send(`gamemode spectator ${user}`);
 	client.send(`effect give ${user} minecraft:blindness 1000000`);
 	client.send(`effect give ${user} minecraft:slowness 1000000 255`);
 };
 
-const unlimitPlayer = (client, user) => {
-	client.send(`gamemode survival ${user}`);
-	client.send(`effect clear ${user} minecraft:blindness`);
-	client.send(`effect clear ${user} minecraft:slowness`);
+const unlimitPlayer = (client, user, player, left = false) => {
+	clearTimeout(player.kickTimeout);
+	clearInterval(player.positionInterval);
+	if (!left) {
+		client.send(`gamemode ${player.gamemode} ${user}`);
+		client.send(`effect clear ${user} minecraft:blindness`);
+		client.send(`effect clear ${user} minecraft:slowness`);
+	}
 };
 
 const LocalAuth = (bot, client) => {
@@ -36,26 +71,13 @@ const LocalAuth = (bot, client) => {
 	const linked = load('auth') || {};
 	const pins = {};
 
-	setInterval(() => {
-		Object.entries(players).forEach(([ user, x ]) => {
-			if (!x.authed && !x.limited) {
-				limitPlayer(client, user);
-				x.limited = true;
-			}
-		});
-	}, 500);
-
 	client.on('join', ({ user }) => {
 		const player = players[user];
 		if (player) {
-			clearTimeout(player.timeout);
+			unlimitPlayer(client, user, player);
 			delete players[user];
 		}
-		players[user] = {
-			authed: false,
-			timeout: setTimeout(() =>
-				client.send(`kick ${user}`), 300000)
-		};
+		limitPlayer(client, user, players[user] = {});
 		if (linked[user]) {
 			bot.telegram.sendMessage(
 				linked[user],
@@ -66,8 +88,7 @@ const LocalAuth = (bot, client) => {
 	client.on('leave', ({ user }) => {
 		const player = players[user];
 		if (player) {
-			clearTimeout(player.timeout);
-			delete players[user];
+			unlimitPlayer(client, user, player, true);
 		}
 	});
 
@@ -81,9 +102,7 @@ const LocalAuth = (bot, client) => {
 					save('auth', linked);
 					const player = players[user];
 					if (player) {
-						player.authed = true;
-						clearTimeout(player.timeout);
-						unlimitPlayer(client, user);
+						unlimitPlayer(client, user, player);
 						client.send(`tellraw ${user} "Successfully linked with Telegram account!"`);
 					}
 				}
@@ -96,9 +115,7 @@ const LocalAuth = (bot, client) => {
 		if (user) {
 			const player = players[user];
 			if (player) {
-				player.authed = true;
-				clearTimeout(player.timeout);
-				unlimitPlayer(client, user);
+				unlimitPlayer(client, user, player);
 				return ctx.reply('You\'ve successfully authenticated yourself');
 			}
 			return ctx.reply('Log into the server first!');
@@ -111,14 +128,10 @@ const LocalAuth = (bot, client) => {
 		if (user) {
 			const player = players[user];
 			if (player) {
-				clearTimeout(player.timeout);
+				unlimitPlayer(client, user, player);
 				delete players[user];
 			}
-			players[user] = {
-				authed: false,
-				timeout: setTimeout(() =>
-					client.send(`kick ${user}`), 30000)
-			};
+			limitPlayer(client, user, players[user] = {}, 30000);
 			return ctx.reply('Deauthed yourself!');
 		}
 		return ctx.reply('Could not find you, did you /link ?');
