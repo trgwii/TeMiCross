@@ -2,6 +2,8 @@
 
 This is a Minecraft-to-Telegram chat bridge
 
+![Example](images/example.jpg)
+
 ## Setup
 
 ### Prerequisites
