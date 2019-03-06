@@ -1,6 +1,6 @@
 {
   "name": "temicross",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "description": "Telegram - Minecraft chat bridge",
   "main": "index.js",
   "bin": {
