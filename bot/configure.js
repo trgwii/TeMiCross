@@ -33,6 +33,12 @@ const configure = [
 		message: '(for cracked servers) Use local auth?',
 		default: false
 	},
+	{
+		type: 'confirm',
+		name: 'postUpdates',
+		message: 'Notify Telegram about game updates?',
+		default: false
+	},
 	...clientConfig
 ];
 

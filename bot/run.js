@@ -16,6 +16,8 @@ const {
 	logError
 } = require('./utils');
 
+const emitUpdates = require('./gameVersionCheck');
+
 const tgOpts = { parse_mode: 'HTML' };
 
 const splitSpace = R.split(' ');
@@ -88,6 +90,11 @@ const run = opts => {
 
 	const send = msg =>
 		bot.telegram.sendMessage(tgID, msg, tgOpts);
+
+	if (opts.postUpdates) {
+		emitUpdates().on('update', version =>
+			send('<b>New version released:</b> ' + code(version)));
+	}
 
 	let maxPlayers = 0;
 	const players = [];
