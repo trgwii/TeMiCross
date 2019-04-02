@@ -24,6 +24,6 @@
     "iconv-lite": "^0.4.24",
     "inquirer": "^6.2.2",
     "ramda": "^0.26.1",
-    "telegraf": "^3.27.0"
+    "telegraf": "^3.28.0"
   }
 }
