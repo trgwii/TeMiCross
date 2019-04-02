@@ -118,7 +118,7 @@ const run = opts => {
 
 	if (allowList) {
 		new Promise((resolve, reject) => {
-			setTimeout(reject, 3000);
+			setTimeout(() => reject(new Error('/list took too long!')), 30000);
 			return client.once('players_count', count =>
 				resolve([
 					count.current,
@@ -308,6 +308,8 @@ const run = opts => {
 	bot.catch(logError);
 
 	bot.launch();
+
+	return bot;
 };
 
 module.exports = run;

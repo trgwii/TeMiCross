@@ -51,24 +51,31 @@ const run = ({ port, ip, cmd }) => {
 
 	cliInput.on('line', line => stdin.write(line + EOL));
 
-	const server = createServer(client => {
-		client.unref();
-		client.on('error', logError);
-		const clientOutput = rl(client);
-		const clientWriter = line => client.write(line + EOL);
-		clientOutput.on('line', line => stdin.write(line + EOL));
-		minecraftOutput.on('line', clientWriter);
-		client.on('close', () =>
-			minecraftOutput.removeListener('line', clientWriter));
-	});
+	if (port && ip) {
+		const server = createServer(client => {
+			client.unref();
+			client.on('error', logError);
+			const clientOutput = rl(client);
+			const clientWriter = line => client.write(line + EOL);
+			clientOutput.on('line', line => stdin.write(line + EOL));
+			minecraftOutput.on('line', clientWriter);
+			client.on('close', () =>
+				minecraftOutput.removeListener('line', clientWriter));
+		});
 
 
-	minecraftServer.once('exit', () => {
-		server.close();
-		cliInput.close();
-	});
+		minecraftServer.once('exit', () => {
+			server.close();
+			cliInput.close();
+		});
 
-	server.listen(port, ip);
+		server.listen(port, ip);
+	}
+	return {
+		stderr,
+		stdin,
+		stdout
+	};
 };
 
 module.exports = run;

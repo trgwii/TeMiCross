@@ -10,6 +10,7 @@ const r = require;
 
 const plugins = {
 	bot: () => r('../bot'),
+	botwrap: () => r('../botwrap'),
 	client: () => r('../client'),
 	wrap: () => r('../wrap')
 };
