@@ -2,11 +2,9 @@
 
 const compose = require('ramda/src/compose');
 const invertObj = require('ramda/src/invertObj');
-const join = require('ramda/src/join');
 const last = require('ramda/src/last');
 const slice = require('ramda/src/slice');
 const split = require('ramda/src/split');
-const tail = require('ramda/src/tail');
 
 const load = require('../cli/load');
 const save = require('../cli/save');
@@ -144,7 +142,7 @@ const LocalAuth = (bot, client) => {
 		const pin = Pin();
 		pins[pin] = ctx.from.id;
 		return ctx.reply(
-			`Type \`!link ${pin}\` (without quotes) in Minecraft after logging in!`,
+			`Type \`!link ${pin}\` in Minecraft after logging in!`,
 			{ parse_mode: 'Markdown' });
 	});
 };

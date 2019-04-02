@@ -10,14 +10,20 @@ const getVersion = (type = 'release') =>
 const emitUpdates = (type = 'release', init = false) => {
 	const e = new EventEmitter();
 	let version = '';
+	let stop = false;
 	const check = v => {
 		if ((version !== '' || init) && version !== v) {
 			e.emit('update', v);
 		}
 		version = v;
-		setTimeout(() => getVersion(type).then(check), 10000);
+		if (!stop) {
+			setTimeout(() => getVersion(type).then(check), 10000);
+		}
 	};
 	getVersion(type).then(check);
+	e.stop = () => {
+		stop = true;
+	};
 	return e;
 };
 

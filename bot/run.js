@@ -86,14 +86,17 @@ const run = opts => {
 	const bot = new Telegraf(token);
 	bot.options.id = botID;
 
+	client.on('close', () => bot.stop());
 	bot.telegram.getMe().then(info => Object.assign(bot.options, info));
 
 	const send = msg =>
 		bot.telegram.sendMessage(tgID, msg, tgOpts);
 
 	if (opts.postUpdates) {
-		emitUpdates().on('update', version =>
+		const updates = emitUpdates();
+		updates.on('update', version =>
 			send('<b>New version released:</b> ' + code(version)));
+		client.on('close', () => updates.stop());
 	}
 
 	let maxPlayers = 0;
@@ -304,7 +307,7 @@ const run = opts => {
 
 	bot.catch(logError);
 
-	bot.startPolling();
+	bot.launch();
 };
 
 module.exports = run;

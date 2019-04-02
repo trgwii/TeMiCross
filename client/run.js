@@ -8,6 +8,10 @@ const Parser = require('./parser');
 
 const run = ({ port, ip, interactive = false, servertype }) => {
 	const conn = connect(Number(port), ip);
+	conn.on('close', () => {
+		console.error('Lost connection to server, exiting...');
+		process.stdin.pause();
+	});
 	const parser = Parser(servertype, conn);
 	if (interactive) {
 		const rl = createInterface({ input: process.stdin });

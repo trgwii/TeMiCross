@@ -43,6 +43,8 @@ const run = ({ port, ip, cmd }) => {
 
 	process.on('SIGINT', () =>
 		stdin.write('stop' + EOL));
+	process.on('SIGTERM', () =>
+		stdin.write('stop' + EOL));
 
 	const minecraftOutput = rl(stdout);
 	const cliInput = rl(process.stdin);
@@ -50,6 +52,7 @@ const run = ({ port, ip, cmd }) => {
 	cliInput.on('line', line => stdin.write(line + EOL));
 
 	const server = createServer(client => {
+		client.unref();
 		client.on('error', logError);
 		const clientOutput = rl(client);
 		const clientWriter = line => client.write(line + EOL);
