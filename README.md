@@ -30,7 +30,7 @@ This mode enables updating the bot without restarting the Minecraft server.
 
 #### Setup server
 
-1. Follow steps 1-3 from [above](#easy-mode-bot-+-minecraft-server).
+1. Follow steps 1-3 from [above](#easy-mode-bot--minecraft-server).
 1. Run `tmc wrap` to start the server.
 	* You will be asked to fill in some values.
 1. The server will start.
