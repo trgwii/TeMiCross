@@ -307,7 +307,7 @@ const run = opts => {
 
 	bot.catch(logError);
 
-	bot.launch();
+	bot.launch(opts.telegraf);
 
 	return bot;
 };
