@@ -2,4 +2,8 @@
 
 const username = require('../username');
 
-module.exports = '(?<user>' + username + ') joined the game$';
+module.exports = '(?<user>' +
+	username +
+	') (\\(formerly known as ' +
+	username +
+	'\\) )?joined the game$';
