@@ -17,7 +17,7 @@ const getMessages = type => ({
 			...result,
 			// eslint-disable-next-line global-require
 			[file]: require(join(__dirname, `/${type}/messages`, file))
-		}))
+		}), {})
 });
 
 const Parser = (type, stream) => {
