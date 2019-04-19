@@ -40,7 +40,7 @@ module.exports =
 		'burned to death|' +
 		'walked into fire whilst fighting .+|' +
 		'went off with a bang( whilst fighting .+)?|' +
-		'tried to swim in lava( while trying to escape .+)?|' +
+		'tried to swim in lava(( while trying)? to escape .+)?|' +
 		'discovered floor was lava|' +
 		'walked into danger zone due to .+|' +
 		'got finished off by .+|' +
