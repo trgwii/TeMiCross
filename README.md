@@ -37,7 +37,7 @@ This mode enables updating the bot without restarting the Minecraft server.
 
 #### Setup bot
 
-1. Open a new terminal and `cd` to any folder (Your bot config will be stored here, if you don't know which folder to pick, the same folder as [above](#easy-mode-bot-+-minecraft-server) is a good choice).
+1. Open a new terminal and `cd` to any folder (Your bot config will be stored here, if you don't know which folder to pick, the same folder as [above](#easy-mode-bot--minecraft-server) is a good choice).
 1. Run `tmc bot` (make sure the Minecraft server is started using `tmc wrap` first, see [above](#setup-server)).
 	* You will be asked to fill in some more values.
 	* Use the token you got from [@BotFather](https://t.me/BotFather).
