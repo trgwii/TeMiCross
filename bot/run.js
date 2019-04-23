@@ -199,7 +199,7 @@ const run = opts => {
 
 	const handler = R.ifElse(
 		R.compose(
-			R.both(() => players.length > 0),
+			x => players.length > 0 && x,
 			R.equals(tgID),
 			String,
 			chatID,
