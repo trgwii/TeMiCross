@@ -54,3 +54,11 @@ The client allows remote control of a server that has been properly set up with 
 1. Run `tmc client` (make sure the Minecraft server is started using `tmc wrap` first, see [above](#setup-server)).
 	* You will be asked to fill in even more values.
 1. The client will start, and you can type commands into it to run commands on the server console.
+
+## Tips
+
+### Reconfigure
+
+You can reconfigure the bot at any time by running: `tmc <command> config`
+
+Example: `tmc botwrap config` will load values from `botwrapper.json` and ask you the configuration questions again. You may or may not need to do this after updating.

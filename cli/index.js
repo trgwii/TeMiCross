@@ -17,13 +17,24 @@ const plugins = {
 
 const args = process.argv.slice(2);
 const command = args.shift();
+const reconfigure = args[0] && args[0].startsWith('conf');
 
 if (plugins[command]) {
 	const plugin = plugins[command]();
 	return Promise.resolve(load(plugin.file))
 		.then(settings =>
-			settings ||
-				inquirer.prompt(plugin.configure))
+			// eslint-disable-next-line operator-linebreak
+			settings && !reconfigure ? settings :
+				inquirer.prompt(
+					settings
+						? plugin.configure.map(question =>
+							settings[question.name]
+								? {
+									...question,
+									default: settings[question.name]
+								}
+								: question)
+						: plugin.configure))
 		.then(settings =>
 			save(plugin.file, settings))
 		.then(settings =>
