@@ -22,15 +22,6 @@ const configure = [
 		validate: x =>
 			isIP(x) > 0,
 		filter: x => x.trim()
-	},
-	{
-		type: 'list',
-		name: 'servertype',
-		message: 'What type of server is it?',
-		choices: [
-			'vanilla',
-			'spigot'
-		]
 	}
 ];
 

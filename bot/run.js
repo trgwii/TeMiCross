@@ -118,7 +118,7 @@ const run = opts => {
 
 	if (allowList) {
 		new Promise((resolve, reject) => {
-			setTimeout(() => reject(new Error('/list took too long!')), 30000);
+			setTimeout(() => reject(new Error('/list took too long!')), 300000);
 			return client.once('players_count', count =>
 				resolve([
 					count.current,

@@ -20,8 +20,13 @@ const getMessages = type => ({
 		}), {})
 });
 
+const fixType = t =>
+	[ 'vanilla', 'old-spigot' ].includes(t)
+		? t
+		: 'vanilla';
+
 const Parser = (type, stream) => {
-	const { prefix, messages } = getMessages(type);
+	const { prefix, messages } = getMessages(fixType(type));
 	const rl = createInterface({ input: stream });
 
 	const handlers = mapObjIndexed((regexp, file) => ({

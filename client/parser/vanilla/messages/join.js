@@ -2,8 +2,4 @@
 
 const username = require('../username');
 
-module.exports = '(?<user>' +
-	username +
-	') (\\(formerly known as ' +
-	username +
-	'\\) )?joined the game$';
+module.exports = 'UUID of player (?<user>' + username + ') is (?<uuid>.+)$';
