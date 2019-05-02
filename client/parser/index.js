@@ -9,21 +9,29 @@ const head = require('ramda/src/head');
 const map = require('ramda/src/map');
 const mapObjIndexed = require('ramda/src/mapObjIndexed');
 
-const getMessages = type => ({
-	// eslint-disable-next-line global-require
-	prefix: require(`./${type}/prefix`),
-	messages: readdirSync(join(__dirname, `/${type}/messages`))
+const loadMessages = type =>
+	readdirSync(join(__dirname, `/${type}/messages`))
 		.reduce((result, file) => ({
 			...result,
 			// eslint-disable-next-line global-require
 			[file]: require(join(__dirname, `/${type}/messages`, file))
-		}), {})
+		}), {});
+
+const getMessages = type => ({
+	// eslint-disable-next-line global-require
+	prefix: require(`./${type}/prefix`),
+	messages: type === 'default'
+		? loadMessages(type)
+		: {
+			...loadMessages('default'),
+			...loadMessages(type)
+		}
 });
 
 const fixType = t =>
-	[ 'vanilla', 'old-spigot' ].includes(t)
+	[ 'default', 'old-spigot' ].includes(t)
 		? t
-		: 'vanilla';
+		: 'default';
 
 const Parser = (type, stream) => {
 	const { prefix, messages } = getMessages(fixType(type));

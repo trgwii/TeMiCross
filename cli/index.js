@@ -6,13 +6,13 @@ const inquirer = require('inquirer');
 const load = require('./load');
 const save = require('./save');
 
-const r = require;
-
 const plugins = {
-	bot: () => r('../bot'),
-	botwrap: () => r('../botwrap'),
-	client: () => r('../client'),
-	wrap: () => r('../wrap')
+	/* eslint-disable global-require */
+	bot: () => require('../bot'),
+	botwrap: () => require('../botwrap'),
+	client: () => require('../client'),
+	wrap: () => require('../wrap')
+	/* eslint-enable global-require */
 };
 
 const args = process.argv.slice(2);
