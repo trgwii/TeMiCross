@@ -6,7 +6,7 @@ const { createInterface } = require('readline');
 
 const Parser = require('./parser');
 
-const run = ({ port, ip, stdin, stdout, interactive = false, servertype = 'vanilla' }) => {
+const run = ({ port, ip, stdin, stdout, interactive = false, servertype }) => {
 	const [ output, input ] = stdin && stdout
 		? [ stdin, stdout ]
 		: (x => [ x, x ])(connect(Number(port), ip));
