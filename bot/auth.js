@@ -1,10 +1,12 @@
 'use strict';
 
-const compose = require('ramda/src/compose');
-const invertObj = require('ramda/src/invertObj');
-const last = require('ramda/src/last');
-const slice = require('ramda/src/slice');
-const split = require('ramda/src/split');
+const {
+	compose,
+	invertObj,
+	last,
+	slice,
+	split
+} = require('ramda');
 
 const load = require('../cli/load');
 const save = require('../cli/save');

@@ -1,23 +1,24 @@
 'use strict';
 
-// eslint-disable-next-line no-underscore-dangle
-const __ = require('ramda/src/__');
-const append = require('ramda/src/append');
-const assoc = require('ramda/src/assoc');
-const compose = require('ramda/src/compose');
-const concat = require('ramda/src/concat');
-const flip = require('ramda/src/flip');
-const ifElse = require('ramda/src/ifElse');
-const intersperse = require('ramda/src/intersperse');
-const is = require('ramda/src/is');
-const map = require('ramda/src/map');
-const nthArg = require('ramda/src/nthArg');
-const of = require('ramda/src/of');
-const replace = require('ramda/src/replace');
-const split = require('ramda/src/split');
-const startsWith = require('ramda/src/startsWith');
-const trim = require('ramda/src/trim');
-const when = require('ramda/src/when');
+const {
+	__,
+	append,
+	assoc,
+	compose,
+	concat,
+	flip,
+	ifElse,
+	intersperse,
+	is,
+	map,
+	nthArg,
+	of,
+	replace,
+	split,
+	startsWith,
+	trim,
+	when
+} = require('ramda');
 
 const textJSON = when(
 	is(String),

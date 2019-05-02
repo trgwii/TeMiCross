@@ -5,9 +5,11 @@ const { readdirSync } = require('fs');
 const { createInterface } = require('readline');
 const parse = require('../dataparser');
 
-const head = require('ramda/src/head');
-const map = require('ramda/src/map');
-const mapObjIndexed = require('ramda/src/mapObjIndexed');
+const {
+	head,
+	map,
+	mapObjIndexed
+} = require('ramda');
 
 const loadMessages = type =>
 	readdirSync(join(__dirname, `/${type}/messages`))
