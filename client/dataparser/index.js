@@ -12,7 +12,8 @@ const trim = x => x.trim();
 /* eslint-disable no-nested-ternary, indent, operator-linebreak, max-len */
 
 const parse = str =>
-	surroundedBy('[', ']', str) ? unwrap(str).split(/\s*,\s*/).map(parse) :
+	surroundedBy('[', ']', str) ? bracketSplit(',', unwrap(str))
+		.map(trim).map(parse) :
 	surroundedBy('{', '}', str) ? bracketSplit(',', unwrap(str))
 		.map(trim)
 		.map(kv => {
