@@ -19,11 +19,11 @@
   "author": "Thomas Rory Gummerson <thomas@gummerson.no> (https://trgwii.no)",
   "license": "Beerware",
   "dependencies": {
-    "axios": "^0.19.0",
+    "axios": "^0.19.2",
     "bracket-split": "^1.1.5",
-    "iconv-lite": "^0.5.0",
-    "inquirer": "^7.0.0",
+    "iconv-lite": "^0.5.1",
+    "inquirer": "^7.0.4",
     "ramda": "^0.26.1",
-    "telegraf": "^3.33.2"
+    "telegraf": "^3.36.0"
   }
 }
