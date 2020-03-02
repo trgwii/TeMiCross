@@ -1,0 +1,14 @@
+{
+	"compilerOptions": {
+		"lib": [ "ES2019" ],
+		"target": "ES2019",
+		"module": "CommonJS",
+
+		"strict": true,
+
+		"outDir": "dist"
+	},
+	"include": [
+		"src/cli/index.ts"
+	]
+}
