@@ -1,31 +1,46 @@
 #!/usr/bin/env node
-'use strict';
 
-const inquirer = require('inquirer');
+import * as inquirer from 'inquirer';
 
-const load = require('./load');
-const save = require('./save');
+import { Settings } from './settings';
+
+import load from './load';
+import save from './save';
+
+import bot from '../bot';
+import botwrap from '../botwrap';
+import client from '../client';
+import wrap from '../wrap';
 
 const plugins = {
-	/* eslint-disable global-require */
-	bot: () => require('../bot'),
-	botwrap: () => require('../botwrap'),
-	client: () => require('../client'),
-	wrap: () => require('../wrap')
-	/* eslint-enable global-require */
+	bot,
+	botwrap,
+	client,
+	wrap
 };
 
 const args = process.argv.slice(2);
 const command = args.shift();
 const reconfigure = args[0] && args[0].startsWith('conf');
 
-if (plugins[command]) {
+
+const helpText = `Possible arguments:
+${Object.keys(plugins).map(x => `\t${x}`).join('\n')}
+`;
+
+if (!command || command.length === 0) {
+	console.log(helpText);
+} else if (!plugins[command]) {
+	// eslint-disable-next-line no-console
+	process.exitCode = 1;
+	console.error('Unknown command: ' + command);
+} else {
 	const plugin = plugins[command]();
-	return Promise.resolve(load(plugin.file))
+	Promise.resolve(load<Settings>(plugin.file))
 		.then(settings =>
 			// eslint-disable-next-line operator-linebreak
 			settings && !reconfigure ? settings :
-				inquirer.prompt(
+				inquirer.prompt<typeof settings>(
 					settings
 						? plugin.configure.map(question =>
 							settings[question.name]
@@ -36,18 +51,7 @@ if (plugins[command]) {
 								: question)
 						: plugin.configure))
 		.then(settings =>
-			save(plugin.file, settings))
+			save<typeof settings>(plugin.file, settings))
 		.then(settings =>
 			plugin.run({ ...settings, interactive: true }));
 }
-
-const helpText = `Possible arguments:
-${Object.keys(plugins).map(x => `\t${x}`).join('\n')}
-`;
-
-if (!command || command.length === 0) {
-	return console.log(helpText);
-}
-// eslint-disable-next-line no-console
-process.exitCode = 1;
-return console.error('Unknown command: ' + command);

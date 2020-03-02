@@ -1,15 +1,13 @@
-'use strict';
+import { join } from 'path';
+import { readdirSync } from 'fs';
+import { createInterface } from 'readline';
+import parse from '../dataparser';
 
-const { join } = require('path');
-const { readdirSync } = require('fs');
-const { createInterface } = require('readline');
-const parse = require('../dataparser');
-
-const {
+import {
 	head,
 	map,
 	mapObjIndexed
-} = require('ramda');
+} from 'ramda';
 
 const loadMessages = type =>
 	readdirSync(join(__dirname, `/${type}/messages`))
@@ -63,4 +61,4 @@ const Parser = (type, stream) => {
 	return rl;
 };
 
-module.exports = Parser;
+export default Parser;

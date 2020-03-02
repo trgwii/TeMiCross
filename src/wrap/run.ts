@@ -1,12 +1,10 @@
-'use strict';
+import { EOL, platform } from 'os';
+import { spawn } from 'child_process';
+import { createServer } from 'net';
+import { createInterface } from 'readline';
+import { decodeStream } from 'iconv-lite';
 
-const { EOL, platform } = require('os');
-const { spawn } = require('child_process');
-const { createServer } = require('net');
-const { createInterface } = require('readline');
-const { decodeStream } = require('iconv-lite');
-
-const bracketSplit = require('bracket-split');
+import bracketSplit from 'bracket-split';
 
 const splitCommand = x =>
 	bracketSplit(' ', x, [], [ '"' ]);
@@ -78,4 +76,4 @@ const run = ({ port, ip, cmd }) => {
 	};
 };
 
-module.exports = run;
+export default run;

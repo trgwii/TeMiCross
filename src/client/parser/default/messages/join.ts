@@ -1,5 +1,3 @@
-'use strict';
+import username from '../username';
 
-const username = require('../username');
-
-module.exports = 'UUID of player (?<user>' + username + ') is (?<uuid>.+)$';
+export default 'UUID of player (?<user>' + username + ') is (?<uuid>.+)$';

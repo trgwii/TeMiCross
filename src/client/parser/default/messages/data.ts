@@ -1,7 +1,6 @@
-'use strict';
+import username from '../username';
 
-const username = require('../username');
-
-module.exports = '(?<user>' +
-	username +
+export default
+	'(?<user>' +
+		username +
 	'|.+?) has the following entity data: (?<data>.+)$';

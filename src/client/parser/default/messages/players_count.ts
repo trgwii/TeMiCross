@@ -1,7 +1,5 @@
-'use strict';
+import players from './players_online';
 
-const players = require('./players_online');
-
-module.exports =
+export default
 	'There are (?<current>\\d+) of a max (?<max>\\d+) players online: ' +
 	players;

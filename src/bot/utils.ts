@@ -1,8 +1,6 @@
-'use strict';
+import fs from 'fs';
 
-const fs = require('fs');
-
-const {
+import {
 	__,
 	compose,
 	concat,
@@ -12,37 +10,28 @@ const {
 	props,
 	replace,
 	tap
-} = require('ramda');
+} from 'ramda';
 
-const load = compose(
+export const load = compose(
 	JSON.parse,
 	flip(fs.readFileSync)('utf8'));
 
-const escape = compose(
+export const escape = compose(
 	replace(/>/g, '&gt;'),
 	replace(/</g, '&lt;'),
 	replace(/&/g, '&amp;'),
 	String);
 
-const code = compose(
+export const code = compose(
 	concat(__, '</code>'),
 	concat('<code>'),
 	escape);
 
-const name = prop('first_name');
+export const name = prop('first_name');
 
-const log = tap(console.log);
+export const log = tap(console.log);
 
-const logError = tap(compose(
+export const logError = tap(compose(
 	console.error,
 	join(': '),
 	props([ 'name', 'message' ])));
-
-module.exports = {
-	code,
-	escape,
-	load,
-	log,
-	logError,
-	name
-};

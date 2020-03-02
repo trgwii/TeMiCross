@@ -1,6 +1,4 @@
-'use strict';
-
-const { isIP } = require('net');
+import { isIP } from 'net';
 
 const configure = [
 	{
@@ -25,4 +23,4 @@ const configure = [
 	}
 ];
 
-module.exports = configure;
+export default configure;

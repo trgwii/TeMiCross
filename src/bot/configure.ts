@@ -1,6 +1,4 @@
-'use strict';
-
-const clientConfig = require('../client/configure');
+import clientConfig from '../client/configure';
 
 const configure = [
 	{
@@ -42,4 +40,4 @@ const configure = [
 	...clientConfig
 ];
 
-module.exports = configure;
+export default configure;

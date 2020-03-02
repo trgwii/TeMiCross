@@ -1,6 +1,4 @@
-'use strict';
+import username from '../username';
+import text from '../text';
 
-const username = require('../username');
-const text = require('../text');
-
-module.exports = '\\[(?<user>' + username + ')\\] ' + text;
+export default '\\[(?<user>' + username + ')\\] ' + text;

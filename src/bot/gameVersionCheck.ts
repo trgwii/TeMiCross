@@ -1,7 +1,5 @@
-'use strict';
-
-const { EventEmitter } = require('events');
-const axios = require('axios');
+import { EventEmitter } from 'events';
+import axios from 'axios';
 
 const getVersion = (type = 'release') =>
 	axios('https://launchermeta.mojang.com/mc/game/version_manifest.json')
@@ -27,4 +25,4 @@ const emitUpdates = (type = 'release', init = false) => {
 	return e;
 };
 
-module.exports = emitUpdates;
+export default emitUpdates;

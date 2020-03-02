@@ -1,6 +1,4 @@
-'use strict';
+import time from './time';
+import threadLoglevel from './threadLoglevel';
 
-const time = require('./time');
-const threadLoglevel = require('./threadLoglevel');
-
-module.exports = time + threadLoglevel;
+export default time + threadLoglevel;

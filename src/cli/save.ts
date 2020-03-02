@@ -1,10 +1,8 @@
-'use strict';
+import { writeFileSync } from 'fs';
 
-const { writeFileSync } = require('fs');
-
-const save = (name, data) => {
+const save = <T>(name: string, data: T): T => {
 	writeFileSync(`${name}.json`, JSON.stringify(data, null, '\t'));
 	return data;
 };
 
-module.exports = save;
+export default save;

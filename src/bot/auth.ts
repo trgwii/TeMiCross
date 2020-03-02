@@ -1,15 +1,13 @@
-'use strict';
-
-const {
+import {
 	compose,
 	invertObj,
 	last,
 	slice,
 	split
-} = require('ramda');
+} from 'ramda';
 
-const load = require('../cli/load');
-const save = require('../cli/save');
+import load from '../cli/load';
+import save from '../cli/save';
 
 const Pin = compose(
 	slice(0, 4),
@@ -149,4 +147,4 @@ const LocalAuth = (bot, client) => {
 	});
 };
 
-module.exports = LocalAuth;
+export default LocalAuth;

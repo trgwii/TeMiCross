@@ -1,8 +1,6 @@
-'use strict';
+import username from '../username';
 
-const username = require('../username');
-
-module.exports =
+export default
 	'(?<user>' +
 		username +
 	') has made the advancement \\[(?<advancement>.+)\\]$';

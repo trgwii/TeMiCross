@@ -1,6 +1,4 @@
-'use strict';
-
-const {
+import {
 	__,
 	append,
 	assoc,
@@ -18,9 +16,9 @@ const {
 	startsWith,
 	trim,
 	when
-} = require('ramda');
+} from 'ramda';
 
-const textJSON = when(
+export const textJSON = when(
 	is(String),
 	compose(
 		intersperse('\n'),
@@ -75,7 +73,7 @@ const fromJSON = (name, telegram, reply) => [
 ];
 
 
-const messageJSON = (telegram, from, text,
+export const messageJSON = (telegram, from, text,
 	hoverType,
 	hoverUserTelegram, hoverUser, hoverText) => [
 	...fromJSON(from, telegram,
@@ -84,8 +82,3 @@ const messageJSON = (telegram, from, text,
 	// ...replyText ? replyTextJSON(replyText) : [],
 	...textJSON(text)
 ];
-
-module.exports = {
-	textJSON,
-	messageJSON
-};

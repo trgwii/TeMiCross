@@ -1,29 +1,79 @@
 {
-  "name": "temicross",
-  "version": "2.3.1",
-  "description": "Telegram - Minecraft chat bridge",
-  "main": "index.js",
-  "bin": {
-    "temicross": "./cli/index.js",
-    "tmc": "./cli/index.js"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "Telegram",
-    "Minecraft",
-    "Chat",
-    "Bridge"
-  ],
-  "author": "Thomas Rory Gummerson <thomas@gummerson.no> (https://trgwii.no)",
-  "license": "Beerware",
-  "dependencies": {
-    "axios": "^0.19.2",
-    "bracket-split": "^1.1.5",
-    "iconv-lite": "^0.5.1",
-    "inquirer": "^7.0.4",
-    "ramda": "^0.26.1",
-    "telegraf": "^3.36.0"
-  }
+	"name": "temicross",
+	"version": "2.3.1",
+	"description": "Telegram - Minecraft chat bridge",
+	"main": "dist/cli/index.js",
+	"bin": {
+		"temicross": "./dist/cli/index.js",
+		"tmc": "./dist/cli/index.js"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"Telegram",
+		"Minecraft",
+		"Chat",
+		"Bridge"
+	],
+	"author": "Thomas Rory Gummerson <thomas@gummerson.no> (https://trgwii.no)",
+	"license": "Beerware",
+	"dependencies": {
+		"axios": "^0.19.2",
+		"bracket-split": "^1.1.5",
+		"iconv-lite": "^0.5.1",
+		"inquirer": "^7.0.5",
+		"ramda": "^0.27.0",
+		"telegraf": "^3.36.0"
+	},
+	"devDependencies": {
+		"@types/inquirer": "^6.5.0",
+		"@types/node": "^13.7.7",
+		"@types/ramda": "^0.26.43",
+		"@typescript-eslint/eslint-plugin": "^2.22.0",
+		"@typescript-eslint/parser": "^2.22.0",
+		"eslint": "^6.8.0",
+		"typescript": "^3.8.3"
+	},
+	"eslintConfig": {
+		"env": {
+			"es6": true,
+			"node": true
+		},
+		"extends": [
+			"eslint:recommended",
+			"plugin:@typescript-eslint/eslint-recommended",
+			"plugin:@typescript-eslint/recommended"
+		],
+		"globals": {
+			"Atomics": "readonly",
+			"SharedArrayBuffer": "readonly"
+		},
+		"parser": "@typescript-eslint/parser",
+		"parserOptions": {
+			"ecmaVersion": 2019,
+			"sourceType": "module"
+		},
+		"plugins": [
+			"@typescript-eslint"
+		],
+		"rules": {
+			"indent": [
+				"error",
+				"tab"
+			],
+			"linebreak-style": [
+				"error",
+				"unix"
+			],
+			"quotes": [
+				"error",
+				"single"
+			],
+			"semi": [
+				"error",
+				"always"
+			]
+		}
+	}
 }

@@ -1,3 +1,1 @@
-'use strict';
-
-module.exports = '(?<text>.*)$';
+export default '(?<text>.*)$';

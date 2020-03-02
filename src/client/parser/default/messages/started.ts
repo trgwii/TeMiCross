@@ -1,3 +1,1 @@
-'use strict';
-
-module.exports = 'Done \\((?<ms>\\d+(\\.\\d+)?)s\\)! For help, type "help"';
+export default 'Done \\((?<ms>\\d+(\\.\\d+)?)s\\)! For help, type "help"';

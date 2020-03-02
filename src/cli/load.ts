@@ -1,10 +1,8 @@
-'use strict';
-
 const r = require;
 
-const { resolve } = require('path');
+import { resolve } from 'path';
 
-const load = name => {
+const load = <T>(name: string): T | null => {
 	try {
 		return r(resolve(`${name}.json`));
 	} catch (err) {
@@ -15,4 +13,4 @@ const load = name => {
 	}
 };
 
-module.exports = load;
+export default load;

@@ -1,8 +1,6 @@
-'use strict';
+import username from '../username';
 
-const username = require('../username');
-
-module.exports =
+export default
 	'(?<players>(' +
 		username +
 	')?(\\s*,\\s*(' +

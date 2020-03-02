@@ -1,9 +1,7 @@
-'use strict';
+import configure from './configure';
+import run from './run';
 
-const configure = require('./configure');
-const run = require('./run');
-
-module.exports = {
+export default {
 	configure,
 	file: 'clientsettings',
 	run

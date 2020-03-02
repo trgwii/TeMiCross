@@ -1,10 +1,8 @@
-'use strict';
+import { EOL } from 'os';
+import { connect } from 'net';
+import { createInterface } from 'readline';
 
-const { EOL } = require('os');
-const { connect } = require('net');
-const { createInterface } = require('readline');
-
-const Parser = require('./parser');
+import Parser from './parser';
 
 const run = ({ port, ip, stdin, stdout, interactive = false, servertype }) => {
 	const [ output, input ] = stdin && stdout
@@ -26,4 +24,4 @@ const run = ({ port, ip, stdin, stdout, interactive = false, servertype }) => {
 	return parser;
 };
 
-module.exports = run;
+export default run;

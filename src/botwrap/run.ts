@@ -1,7 +1,5 @@
-'use strict';
-
-const runWrapper = require('../wrap/run');
-const runBot = require('../bot/run');
+import runWrapper from '../wrap/run';
+import runBot from '../bot/run';
 
 const run = opts => {
 	const { stdin, stdout } = runWrapper(opts);
@@ -9,4 +7,4 @@ const run = opts => {
 	return bot;
 };
 
-module.exports = run;
+export default run;

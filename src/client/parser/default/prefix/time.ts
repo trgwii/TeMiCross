@@ -1,3 +1,1 @@
-'use strict';
-
-module.exports = '^\\[(?<time>\\d{2}:\\d{2}:\\d{2})] ';
+export default '^\\[(?<time>\\d{2}:\\d{2}:\\d{2})] ';

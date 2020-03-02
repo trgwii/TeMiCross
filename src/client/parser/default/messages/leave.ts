@@ -1,5 +1,3 @@
-'use strict';
+import username from '../username';
 
-const username = require('../username');
-
-module.exports = '(?<user>' + username + ') left the game$';
+export default '(?<user>' + username + ') left the game$';

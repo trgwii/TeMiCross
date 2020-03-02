@@ -1,10 +1,8 @@
-'use strict';
+import configure from './configure';
 
-const configure = require('./configure');
+import run from './run';
 
-const run = require('./run');
-
-module.exports = {
+export default {
 	configure,
 	file: 'wrapper',
 	run

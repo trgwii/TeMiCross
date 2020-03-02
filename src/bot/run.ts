@@ -1,22 +1,20 @@
-'use strict';
+import R from 'ramda';
+import Telegraf from 'telegraf';
 
-const R = require('ramda');
-const Telegraf = require('telegraf');
+import Client from '../client/run';
 
-const Client = require('../client/run');
-
-const {
+import {
 	messageJSON,
 	textJSON
-} = require('../client/generator');
+} from '../client/generator';
 
-const {
+import {
 	code,
 	escape,
 	logError
-} = require('./utils');
+} from './utils';
 
-const emitUpdates = require('./gameVersionCheck');
+import emitUpdates from './gameVersionCheck';
 
 const tgOpts = { parse_mode: 'HTML' };
 
@@ -312,4 +310,4 @@ const run = opts => {
 	return bot;
 };
 
-module.exports = run;
+export default run;

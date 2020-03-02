@@ -1,7 +1,5 @@
-'use strict';
-
-const wrapConfig = require('../wrap/configure');
-const botConfig = require('../bot/configure');
+import wrapConfig from '../wrap/configure';
+import botConfig from '../bot/configure';
 
 const removeNetwork = x => ![ 'port', 'ip' ].includes(x.name);
 
@@ -10,4 +8,4 @@ const configure = [
 	...botConfig.filter(removeNetwork)
 ];
 
-module.exports = configure;
+export default configure;

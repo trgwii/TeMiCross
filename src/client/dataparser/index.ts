@@ -1,6 +1,4 @@
-'use strict';
-
-const bracketSplit = require('bracket-split');
+import bracketSplit from 'bracket-split';
 
 const unwrap = str => str.slice(1, -1);
 
@@ -28,4 +26,4 @@ const parse = str =>
 	str.match(/^-?\d+$/) ? Number(str) :
 	str;
 
-module.exports = parse;
+export default parse;
