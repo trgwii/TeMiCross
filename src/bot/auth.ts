@@ -96,6 +96,14 @@ const LocalAuth = (bot, client) => {
 			if (command === 'link') {
 				const [ pin ] = args;
 				if (pins[pin]) {
+					if (linked[user]) {
+						client.send(`tellraw ${user} "This Minecraft account is already in use by another Telegram user!"`);
+						setTimeout(() => client.send(`kick ${user}`), 2000);
+						if (players[user]) {
+							unlimitPlayer(client, user, players[user], true);
+						}
+						return;
+					}
 					linked[user] = pins[pin];
 					save('auth', linked);
 					const player = players[user];
