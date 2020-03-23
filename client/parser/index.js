@@ -63,4 +63,6 @@ const Parser = (type, stream) => {
 	return rl;
 };
 
+Parser.fixType = fixType;
+
 module.exports = Parser;
