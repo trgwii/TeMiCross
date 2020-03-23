@@ -2,6 +2,8 @@ import R from 'ramda';
 import Telegraf from 'telegraf';
 
 import Client from '../client/run';
+import Parser from '../client/parser';
+
 
 import {
 	messageJSON,
@@ -80,6 +82,13 @@ const run = opts => {
 	const botID = R.head(R.split(':', token));
 
 	const client = Client({ ...opts, interactive: false });
+
+	const servertype = Parser.fixType(opts.servertype);
+
+	if (servertype === 'default') {
+		client.on('vjoin', data =>
+			client.emit('join', data));
+	}
 
 	const bot = new Telegraf(token);
 	bot.options.id = botID;

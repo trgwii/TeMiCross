@@ -61,4 +61,6 @@ const Parser = (type, stream) => {
 	return rl;
 };
 
+Parser.fixType = fixType;
+
 export default Parser;
