@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import * as inquirer from 'inquirer';
+import r from '@codefeathers/runtype';
 
 import { Settings } from './settings';
 
@@ -16,42 +17,46 @@ const plugins = {
 	bot,
 	botwrap,
 	client,
-	wrap
+	wrap,
 };
 
 const args = process.argv.slice(2);
 const command = args.shift();
 const reconfigure = args[0] && args[0].startsWith('conf');
 
-
 const helpText = `Possible arguments:
-${Object.keys(plugins).map(x => `\t${x}`).join('\n')}
+${Object.keys(plugins)
+	.map(x => `\t${x}`)
+	.join('\n')}
 `;
 
-if (!command || command.length === 0) {
-	console.log(helpText);
-} else if (!plugins[command]) {
-	// eslint-disable-next-line no-console
-	process.exitCode = 1;
-	console.error('Unknown command: ' + command);
-} else {
-	const plugin = plugins[command]();
-	Promise.resolve(load<Settings>(plugin.file))
-		.then(settings =>
-			// eslint-disable-next-line operator-linebreak
-			settings && !reconfigure ? settings :
-				inquirer.prompt<typeof settings>(
-					settings
-						? plugin.configure.map(question =>
-							settings[question.name]
-								? {
-									...question,
-									default: settings[question.name]
-								}
-								: question)
-						: plugin.configure))
-		.then(settings =>
-			save<typeof settings>(plugin.file, settings))
-		.then(settings =>
-			plugin.run({ ...settings, interactive: true }));
+const run = (plugin: typeof plugins[keyof typeof plugins], settings: Settings) => {
+	save(plugin.file, settings);
+	plugin.run({ ...settings, interactive: true });
+};
+
+const addDefaults = (configure: { name: string }[], existing: Settings) =>
+	configure.map(question => ({ ...question, defaut: existing[question.name as keyof Settings] }));
+
+async function main() {
+	if (r.has(plugins)(command)) {
+		const plugin = plugins[command];
+		const existingSettings = load<Settings>(plugin.file);
+
+		if (reconfigure && existingSettings) {
+			const configure = plugin.configure as { name: string }[];
+			const settings = await inquirer.prompt<Settings>(addDefaults(configure, existingSettings));
+			run(plugin, settings);
+		} else if (!reconfigure && !existingSettings) {
+			const settings = await inquirer.prompt<Settings>(plugin.configure);
+			run(plugin, settings);
+		}
+	} else if (!command || command.length === 0) {
+		console.log(helpText);
+	} else {
+		process.exitCode = 1;
+		console.error('Unknown command: ' + command);
+	}
 }
+
+main();
