@@ -1,30 +1,13 @@
-import {
-	compose,
-	invertObj,
-	last,
-	slice,
-	split
-} from 'ramda';
+import { compose, invertObj, last, slice, split } from 'ramda';
 
 import load from '../cli/load';
 import save from '../cli/save';
 
-const Pin = compose(
-	slice(0, 4),
-	last,
-	split('.'),
-	String,
-	Math.random);
+const Pin = compose(slice(0, 4), last, split('.'), String, Math.random);
 
-const gamemodes = [
-	'survival',
-	'creative',
-	'adventure',
-	'survival'
-];
+const gamemodes = ['survival', 'creative', 'adventure', 'survival'];
 
 const limitPlayer = (client, user, player, timeout = 300000) => {
-
 	const gamemodeListener = ({ user: u, data }) => {
 		if (u === user && !Number.isNaN(data)) {
 			player.gamemode = gamemodes[data];
@@ -38,11 +21,12 @@ const limitPlayer = (client, user, player, timeout = 300000) => {
 		}
 	};
 
-	player.kickTimeout = setTimeout(() =>
-		client.send(`kick ${user}`), timeout);
-	player.positionInterval = setInterval(() =>
-		player.position &&
-		client.send(`tp ${user} ${player.position.join(' ')}`), 400);
+	player.kickTimeout = setTimeout(() => client.send(`kick ${user}`), timeout);
+	player.positionInterval = setInterval(
+		() =>
+			player.position && client.send(`tp ${user} ${player.position.join(' ')}`),
+		400,
+	);
 
 	client.on('data', gamemodeListener);
 	client.on('data', positionListener);
@@ -64,7 +48,6 @@ const unlimitPlayer = (client, user, player, left = false) => {
 };
 
 const LocalAuth = (bot, client) => {
-
 	const players = {};
 	const linked = load('auth') || {};
 	const pins = {};
@@ -75,11 +58,12 @@ const LocalAuth = (bot, client) => {
 			unlimitPlayer(client, user, player);
 			delete players[user];
 		}
-		limitPlayer(client, user, players[user] = {});
+		limitPlayer(client, user, (players[user] = {}));
 		if (linked[user]) {
 			bot.telegram.sendMessage(
 				linked[user],
-				'Type /auth to authenticate yourself');
+				'Type /auth to authenticate yourself',
+			);
 		}
 	});
 
@@ -92,12 +76,14 @@ const LocalAuth = (bot, client) => {
 
 	client.on('user', ({ user, text }) => {
 		if (text.startsWith('!')) {
-			const [ command, ...args ] = split(/\s+/, text.slice(1));
+			const [command, ...args] = split(/\s+/, text.slice(1));
 			if (command === 'link') {
-				const [ pin ] = args;
+				const [pin] = args;
 				if (pins[pin]) {
 					if (linked[user]) {
-						client.send(`tellraw ${user} "This Minecraft account is already in use by another Telegram user!"`);
+						client.send(
+							`tellraw ${user} "This Minecraft account is already in use by another Telegram user!"`,
+						);
 						setTimeout(() => client.send(`kick ${user}`), 2000);
 						if (players[user]) {
 							unlimitPlayer(client, user, players[user], true);
@@ -109,7 +95,9 @@ const LocalAuth = (bot, client) => {
 					const player = players[user];
 					if (player) {
 						unlimitPlayer(client, user, player);
-						client.send(`tellraw ${user} "Successfully linked with Telegram account!"`);
+						client.send(
+							`tellraw ${user} "Successfully linked with Telegram account!"`,
+						);
 					}
 				}
 			}
@@ -122,7 +110,7 @@ const LocalAuth = (bot, client) => {
 			const player = players[user];
 			if (player) {
 				unlimitPlayer(client, user, player);
-				return ctx.reply('You\'ve successfully authenticated yourself');
+				return ctx.reply("You've successfully authenticated yourself");
 			}
 			return ctx.reply('Log into the server first!');
 		}
@@ -137,7 +125,7 @@ const LocalAuth = (bot, client) => {
 				unlimitPlayer(client, user, player);
 				delete players[user];
 			}
-			limitPlayer(client, user, players[user] = {}, 30000);
+			limitPlayer(client, user, (players[user] = {}), 30000);
 			return ctx.reply('Deauthed yourself!');
 		}
 		return ctx.reply('Could not find you, did you /link ?');
@@ -149,9 +137,9 @@ const LocalAuth = (bot, client) => {
 		}
 		const pin = Pin();
 		pins[pin] = ctx.from.id;
-		return ctx.reply(
-			`Type \`!link ${pin}\` in Minecraft after logging in!`,
-			{ parse_mode: 'Markdown' });
+		return ctx.reply(`Type \`!link ${pin}\` in Minecraft after logging in!`, {
+			parse_mode: 'Markdown',
+		});
 	});
 };
 

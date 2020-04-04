@@ -24,4 +24,8 @@ export interface BotWrapperSettings {
 	postUpdates: boolean;
 }
 
-export type Settings = ClientSettings | WrapperSettings | BotSettings | BotWrapperSettings;
+export type Settings =
+	| ClientSettings
+	| WrapperSettings
+	| BotSettings
+	| BotWrapperSettings;

@@ -13,7 +13,9 @@ const configure = [
 	{
 		type: 'input',
 		name: 'chatID',
-		message: 'Enter the Telegram chat ID you want to ' + 'forward messages from Minecraft to:',
+		message:
+			'Enter the Telegram chat ID you want to ' +
+			'forward messages from Minecraft to:',
 		validate: (x: string) => Number.isInteger(Number(x)),
 		filter: (x: string) => x.trim(),
 	},

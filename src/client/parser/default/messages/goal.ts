@@ -1,6 +1,5 @@
 import username from '../username';
 
-export default
-	'(?<user>' +
-		username +
+export default '(?<user>' +
+	username +
 	') has reached the goal \\[(?<goal>.+)\\]$';

@@ -2,8 +2,9 @@ import { EventEmitter } from 'events';
 import axios from 'axios';
 
 const getVersion = (type = 'release') =>
-	axios('https://launchermeta.mojang.com/mc/game/version_manifest.json')
-		.then(x => x.data.latest[type]);
+	axios('https://launchermeta.mojang.com/mc/game/version_manifest.json').then(
+		x => x.data.latest[type],
+	);
 
 const emitUpdates = (type = 'release', init = false) => {
 	const e = new EventEmitter();

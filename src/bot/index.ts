@@ -4,5 +4,5 @@ import run from './run';
 export default {
 	configure,
 	file: 'botconfig',
-	run
+	run,
 };

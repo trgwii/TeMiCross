@@ -6,30 +6,24 @@ import { decodeStream } from 'iconv-lite';
 
 import bracketSplit from 'bracket-split';
 
-const splitCommand = x =>
-	bracketSplit(' ', x, [], [ '"' ]);
+const splitCommand = x => bracketSplit(' ', x, [], ['"']);
 
 const logError = err =>
 	// eslint-disable-next-line no-console
 	console.error(err.name + ': ' + err.message);
 
-const rl = stream =>
-	createInterface({ input: stream });
+const rl = stream => createInterface({ input: stream });
 
 const decode = x =>
-	platform() === 'win32'
-		? x.pipe(decodeStream('win1252'))
-		: x;
+	platform() === 'win32' ? x.pipe(decodeStream('win1252')) : x;
 
 const run = ({ port, ip, cmd }) => {
-
-	const [ command, ...args ] = splitCommand(cmd).map(arg =>
-		arg.startsWith('"') && arg.endsWith('"')
-			? arg.slice(1, -1)
-			: arg);
+	const [command, ...args] = splitCommand(cmd).map(arg =>
+		arg.startsWith('"') && arg.endsWith('"') ? arg.slice(1, -1) : arg,
+	);
 
 	const minecraftServer = spawn(command, args, {
-		detached: true
+		detached: true,
 	});
 
 	const { stdin } = minecraftServer;
@@ -39,10 +33,8 @@ const run = ({ port, ip, cmd }) => {
 	stdout.pipe(process.stdout);
 	stderr.pipe(process.stderr);
 
-	process.on('SIGINT', () =>
-		stdin.write('stop' + EOL));
-	process.on('SIGTERM', () =>
-		stdin.write('stop' + EOL));
+	process.on('SIGINT', () => stdin.write('stop' + EOL));
+	process.on('SIGTERM', () => stdin.write('stop' + EOL));
 
 	const minecraftOutput = rl(stdout);
 	const cliInput = rl(process.stdin);
@@ -58,9 +50,9 @@ const run = ({ port, ip, cmd }) => {
 			clientOutput.on('line', line => stdin.write(line + EOL));
 			minecraftOutput.on('line', clientWriter);
 			client.on('close', () =>
-				minecraftOutput.removeListener('line', clientWriter));
+				minecraftOutput.removeListener('line', clientWriter),
+			);
 		});
-
 
 		minecraftServer.once('exit', () => {
 			server.close();
@@ -72,7 +64,7 @@ const run = ({ port, ip, cmd }) => {
 	return {
 		stderr,
 		stdin,
-		stdout
+		stdout,
 	};
 };
 

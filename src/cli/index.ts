@@ -30,13 +30,19 @@ ${Object.keys(plugins)
 	.join('\n')}
 `;
 
-const run = (plugin: typeof plugins[keyof typeof plugins], settings: Settings) => {
+const run = (
+	plugin: typeof plugins[keyof typeof plugins],
+	settings: Settings,
+) => {
 	save(plugin.file, settings);
 	plugin.run({ ...settings, interactive: true });
 };
 
 const addDefaults = (configure: { name: string }[], existing: Settings) =>
-	configure.map(question => ({ ...question, defaut: existing[question.name as keyof Settings] }));
+	configure.map(question => ({
+		...question,
+		defaut: existing[question.name as keyof Settings],
+	}));
 
 async function main() {
 	if (r.has(plugins)(command)) {
@@ -45,7 +51,9 @@ async function main() {
 
 		if (reconfigure && existingSettings) {
 			const configure = plugin.configure as { name: string }[];
-			const settings = await inquirer.prompt<Settings>(addDefaults(configure, existingSettings));
+			const settings = await inquirer.prompt<Settings>(
+				addDefaults(configure, existingSettings),
+			);
 			run(plugin, settings);
 		} else if (!reconfigure && !existingSettings) {
 			const settings = await inquirer.prompt<Settings>(plugin.configure);
