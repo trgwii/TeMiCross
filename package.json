@@ -16,9 +16,15 @@
 		"Chat",
 		"Bridge"
 	],
+	"husky": {
+		"hooks": {
+			"pre-commit": "pretty-quick --staged"
+		}
+	},
 	"author": "Thomas Rory Gummerson <thomas@gummerson.no> (https://trgwii.no)",
 	"license": "Beerware",
 	"dependencies": {
+		"@codefeathers/runtype": "^0.6.2",
 		"axios": "^0.19.2",
 		"bracket-split": "^1.1.5",
 		"iconv-lite": "^0.5.1",
@@ -32,48 +38,9 @@
 		"@types/ramda": "^0.26.43",
 		"@typescript-eslint/eslint-plugin": "^2.22.0",
 		"@typescript-eslint/parser": "^2.22.0",
-		"eslint": "^6.8.0",
+		"husky": "^4.2.3",
+		"prettier": "^2.0.2",
+		"pretty-quick": "^2.0.1",
 		"typescript": "^3.8.3"
-	},
-	"eslintConfig": {
-		"env": {
-			"es6": true,
-			"node": true
-		},
-		"extends": [
-			"eslint:recommended",
-			"plugin:@typescript-eslint/eslint-recommended",
-			"plugin:@typescript-eslint/recommended"
-		],
-		"globals": {
-			"Atomics": "readonly",
-			"SharedArrayBuffer": "readonly"
-		},
-		"parser": "@typescript-eslint/parser",
-		"parserOptions": {
-			"ecmaVersion": 2019,
-			"sourceType": "module"
-		},
-		"plugins": [
-			"@typescript-eslint"
-		],
-		"rules": {
-			"indent": [
-				"error",
-				"tab"
-			],
-			"linebreak-style": [
-				"error",
-				"unix"
-			],
-			"quotes": [
-				"error",
-				"single"
-			],
-			"semi": [
-				"error",
-				"always"
-			]
-		}
 	}
 }
