@@ -8,7 +8,7 @@
 		"tmc": "./dist/cli/index.js"
 	},
 	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1"
+		"test": "eslint src/** && tsc"
 	},
 	"keywords": [
 		"Telegram",
@@ -22,16 +22,16 @@
 		"axios": "^0.19.2",
 		"bracket-split": "^1.1.5",
 		"iconv-lite": "^0.5.1",
-		"inquirer": "^7.0.5",
+		"inquirer": "^7.1.0",
 		"ramda": "^0.27.0",
-		"telegraf": "^3.36.0"
+		"telegraf": "^3.38.0"
 	},
 	"devDependencies": {
 		"@types/inquirer": "^6.5.0",
-		"@types/node": "^13.7.7",
-		"@types/ramda": "^0.26.43",
-		"@typescript-eslint/eslint-plugin": "^2.22.0",
-		"@typescript-eslint/parser": "^2.22.0",
+		"@types/node": "^13.13.4",
+		"@types/ramda": "^0.27.4",
+		"@typescript-eslint/eslint-plugin": "^2.31.0",
+		"@typescript-eslint/parser": "^2.31.0",
 		"eslint": "^6.8.0",
 		"typescript": "^3.8.3"
 	},
@@ -43,7 +43,8 @@
 		"extends": [
 			"eslint:recommended",
 			"plugin:@typescript-eslint/eslint-recommended",
-			"plugin:@typescript-eslint/recommended"
+			"plugin:@typescript-eslint/recommended",
+			"plugin:@typescript-eslint/recommended-requiring-type-checking"
 		],
 		"globals": {
 			"Atomics": "readonly",
@@ -52,7 +53,11 @@
 		"parser": "@typescript-eslint/parser",
 		"parserOptions": {
 			"ecmaVersion": 2019,
-			"sourceType": "module"
+			"sourceType": "module",
+			"tsconfigRootDir": ".",
+			"project": [
+				"./tsconfig.json"
+			]
 		},
 		"plugins": [
 			"@typescript-eslint"
@@ -73,7 +78,8 @@
 			"semi": [
 				"error",
 				"always"
-			]
+			],
+			"@typescript-eslint/camelcase": "off"
 		}
 	}
 }

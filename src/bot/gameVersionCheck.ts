@@ -1,27 +1,36 @@
 import { EventEmitter } from 'events';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
-const getVersion = (type = 'release') =>
+type Latest = {
+	release: string;
+	snapshot: string;
+};
+
+const getVersion = (type: keyof Latest = 'release'): Promise<string> =>
 	axios('https://launchermeta.mojang.com/mc/game/version_manifest.json')
-		.then(x => x.data.latest[type]);
+		.then<string>((x: AxiosResponse<{ latest: Latest }>) => x.data.latest[type]);
 
-const emitUpdates = (type = 'release', init = false) => {
-	const e = new EventEmitter();
+const emitUpdates = (type: keyof Latest = 'release', init = false): EventEmitter => {
 	let version = '';
 	let stop = false;
-	const check = v => {
+	const e: EventEmitter & { stop: () => void } =
+	Object.assign(new EventEmitter(), {
+		stop: (): void => {
+			stop = true;
+		}
+	});
+	const check = (v: string): void => {
 		if ((version !== '' || init) && version !== v) {
 			e.emit('update', v);
 		}
 		version = v;
 		if (!stop) {
-			setTimeout(() => getVersion(type).then(check), 10000);
+			setTimeout(() => {
+				getVersion(type).then(check);
+			}, 10000);
 		}
 	};
 	getVersion(type).then(check);
-	e.stop = () => {
-		stop = true;
-	};
 	return e;
 };
 

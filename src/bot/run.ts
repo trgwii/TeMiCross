@@ -1,5 +1,6 @@
-import R from 'ramda';
+import * as R from 'ramda';
 import Telegraf from 'telegraf';
+import { Message, Chat, User, Update } from 'telegraf/typings/telegram-types';
 
 import Client from '../client/run';
 import Parser from '../client/parser';
@@ -23,23 +24,27 @@ const tgOpts = { parse_mode: 'HTML' };
 const splitSpace = R.split(' ');
 const joinSpace = R.join(' ');
 
-const id = R.prop('id');
-const chat = R.prop('chat');
-const from = R.prop('from');
-const text = R.prop('text');
-const message = R.prop('message');
-const lastName = R.prop('last_name');
-const firstName = R.prop('first_name');
-const reply = R.prop('reply_to_message');
+type UserMessage = Message & { from: User };
+type CaptionMessage = Message & { caption: string };
 
-const chatID = R.o(id, chat);
-const fromID = R.o(id, from);
-const fromLastName = R.o(lastName, from);
-const fromFirstName = R.o(firstName, from);
+const id = (x: User | Chat): number => x.id;
+const chat = (x: Message): Chat => x.chat;
+const from = (x: UserMessage): User => x.from;
+const text = (x: Message): string | undefined => x.text;
+const message = (x: Update): Message | undefined => x.message;
+const lastName = (x: User): string | undefined => x.last_name;
+const firstName = (x: User): string => x.first_name;
+const reply = (x: Message): Message | undefined => x.reply_to_message;
+
+const caption = (x: CaptionMessage): string => x.caption;
+const chatID = (x: Message): number => id(chat(x));
+const fromID = (x: UserMessage): number => id(from(x));
+const fromLastName = (x: UserMessage): string | undefined => lastName(from(x));
+const fromFirstName = (x: UserMessage): string => firstName(from(x));
 
 
 const fromName = R.ifElse(
-	fromLastName,
+	R.o(Boolean, fromLastName),
 	R.o(
 		joinSpace,
 		R.converge(
@@ -58,16 +63,20 @@ const removeMinecraftUsername = R.compose(
 
 const nextArg = R.nthArg(1);
 
-const captionMedia = (name, fn) => R.ifElse(
-	R.compose(R.prop('caption'), fn),
-	R.compose(
-		R.insert(3, R.__, [
+type MinecraftJson = { text: string; color: string };
+type MinecraftJsonOrString = MinecraftJson | string;
+
+// TODO
+const captionMedia = (name: string, fn: (x: Update) => CaptionMessage): (x: Update) => MinecraftJsonOrString[] => R.ifElse(
+	R.compose(Boolean, caption, fn),
+	R.compose<string, string[], MinecraftJsonOrString[], Update>(
+		R.insert<MinecraftJsonOrString>(3, R.__ as unknown as MinecraftJson, [
 			{ text: '[', color: 'white' },
 			{ text: name, color: 'gray' },
 			{ text: '] ', color: 'white' }
 		]),
 		textJSON,
-		R.compose(R.prop('caption'), fn)),
+		R.compose(caption, fn)),
 	R.always([
 		{ text: '[', color: 'white' },
 		{ text: name, color: 'gray' },
