@@ -33,6 +33,12 @@ const limitPlayer = (client, user, player, timeout = 300000) => {
 			client.removeListener('data', gamemodeListener);
 		}
 	};
+	const dimensionListener = ({ user: u, data }) => {
+		if (u === user && typeof data === 'string') {
+			player.dimension = data;
+			client.removeListener('data', dimensionListener);
+		}
+	};
 	const positionListener = ({ user: u, data }) => {
 		if (u === user && Array.isArray(data)) {
 			player.position = data;
@@ -44,15 +50,17 @@ const limitPlayer = (client, user, player, timeout = 300000) => {
 		client.send(`kick ${user}`), timeout);
 	player.positionInterval = setInterval(() =>
 		player.position &&
-		client.send(`tp ${user} ${player.position.join(' ')}`), 400);
+		client.send(`execute in ${player.dimension} run tp ${user} ${player.position.join(' ')}`), 400);
 
 	client.on('data', gamemodeListener);
 	client.on('data', positionListener);
+	client.on('data', dimensionListener);
 	client.send(`data get entity ${user} playerGameType`);
 	client.send(`data get entity ${user} Pos`);
-	client.send(`gamemode spectator ${user}`);
+	client.send(`data get entity ${user} Dimension`);
 	client.send(`effect give ${user} minecraft:blindness 1000000`);
 	client.send(`effect give ${user} minecraft:slowness 1000000 255`);
+	client.send(`gamemode spectator ${user}`);
 };
 
 const unlimitPlayer = (client, user, player, left = false) => {
