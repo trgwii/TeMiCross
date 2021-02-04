@@ -91,7 +91,7 @@ const run = opts => {
 	bot.telegram.getMe().then(info => Object.assign(bot.options, info));
 
 	const send = msg =>
-		bot.telegram.sendMessage(tgID, msg, tgOpts);
+		bot.telegram.sendMessage(tgID, msg, tgOpts).catch(err => console.error('[TG.sendMessage]: ]' + err.message));
 
 	if (opts.postUpdates) {
 		const updates = emitUpdates();
