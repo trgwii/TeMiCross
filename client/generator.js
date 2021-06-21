@@ -55,8 +55,7 @@ const userJSON = ifElse(
       { text: ": ", color: "white" },
     ]),
     assoc("text", __, { color: "white" }),
-    Emoji.unemojify,
-    tap((x) => console.log(x))
+    Emoji.unemojify
   ),
   of
 );
