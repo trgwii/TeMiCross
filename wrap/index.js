@@ -1,11 +1,11 @@
-'use strict';
+"use strict";
 
-const configure = require('./configure');
+const configure = require("./configure");
 
-const run = require('./run');
+const run = require("./run");
 
 module.exports = {
-	configure,
-	file: 'wrapper',
-	run
+  configure,
+  file: "wrapper",
+  run,
 };

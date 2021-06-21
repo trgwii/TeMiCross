@@ -1,5 +1,5 @@
-'use strict';
+"use strict";
 
-const username = require('../username');
+const username = require("../username");
 
-module.exports = '(?<user>' + username + ') left the game$';
+module.exports = "(?<user>" + username + ") left the game$";

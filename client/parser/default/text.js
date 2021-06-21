@@ -1,3 +1,3 @@
-'use strict';
+"use strict";
 
-module.exports = '(?<text>.*)$';
+module.exports = "(?<text>.*)$";

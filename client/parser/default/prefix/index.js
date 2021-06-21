@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const time = require('./time');
-const threadLoglevel = require('./threadLoglevel');
+const time = require("./time");
+const threadLoglevel = require("./threadLoglevel");
 
 module.exports = time + threadLoglevel;

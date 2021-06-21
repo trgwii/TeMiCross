@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const username = require('../username');
+const username = require("../username");
 
 module.exports =
-	'(?<user>' +
-		username +
-	') has made the advancement \\[(?<advancement>.+)\\]$';
+  "(?<user>" +
+  username +
+  ") has made the advancement \\[(?<advancement>.+)\\]$";

@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
-const configure = require('./configure');
-const run = require('./run');
+const configure = require("./configure");
+const run = require("./run");
 
 module.exports = {
-	configure,
-	file: 'botwrapper',
-	run
+  configure,
+  file: "botwrapper",
+  run,
 };

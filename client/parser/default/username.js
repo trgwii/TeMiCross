@@ -1,3 +1,3 @@
-'use strict';
+"use strict";
 
-module.exports = '[a-zA-Z0-9_]{1,16}';
+module.exports = "[a-zA-Z0-9_]{1,16}";

@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-const username = require('../username');
+const username = require("../username");
 
 module.exports =
-	'(?<user>' +
-		username +
-	') has completed the challenge \\[(?<challenge>.+)\\]$';
+  "(?<user>" +
+  username +
+  ") has completed the challenge \\[(?<challenge>.+)\\]$";
