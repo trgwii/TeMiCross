@@ -44,23 +44,52 @@ const removeMinecraftUsername = R.compose(joinSpace, R.tail, splitSpace);
 const nextArg = R.nthArg(1);
 
 const captionMedia = (name, fn) =>
-  R.ifElse(
-    R.compose(R.prop("caption"), fn),
-    R.compose(
-      R.insert(3, R.__, [
+  R.cond([
+    [
+      R.compose(R.prop("caption"), fn),
+      R.compose(
+        R.insert(3, R.__, [
+          { text: "[", color: "white" },
+          { text: name, color: "gray" },
+          { text: "] ", color: "white" },
+        ]),
+        textJSON,
+        R.compose(R.prop("caption"), fn)
+      )
+    ],
+    [
+      R.compose(R.prop("sticker"), fn),
+      R.compose(
+        R.insert(3, R.__, [
+          { text: "[", color: "white" },
+          { text: name, color: "gray" },
+          { text: "] ", color: "white" },
+        ]),
+        textJSON,
+        R.compose(R.prop("emoji"), R.prop("sticker"), fn)
+      )
+    ],
+    [
+      R.compose(R.prop("document"), fn),
+      R.compose(
+        R.insert(3, R.__, [
+          { text: "[", color: "white" },
+          { text: name, color: "gray" },
+          { text: "] ", color: "white" },
+        ]),
+        textJSON,
+        R.compose(R.prop("file_name"), R.prop("document"), fn)
+      )
+    ],
+    [
+      R.T,
+      R.always([
         { text: "[", color: "white" },
         { text: name, color: "gray" },
-        { text: "] ", color: "white" },
-      ]),
-      textJSON,
-      R.compose(R.prop("caption"), fn)
-    ),
-    R.always([
-      { text: "[", color: "white" },
-      { text: name, color: "gray" },
-      { text: "]", color: "white" },
-    ])
-  );
+        { text: "]", color: "white" },
+      ])
+    ]
+  ]);
 
 const run = (opts) => {
   const { token, chatID: tgID, allowList, localAuth } = opts;

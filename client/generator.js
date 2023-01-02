@@ -35,7 +35,8 @@ const textJSON = when(
       )
     ),
     split("\n"),
-    replace(/\n/g, "\n ")
+    replace(/\n/g, "\n "),
+    Emoji.unemojify
   )
 );
 

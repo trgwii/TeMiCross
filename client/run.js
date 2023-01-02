@@ -14,6 +14,7 @@ const run = ({ port, ip, stdin, stdout, interactive = false, servertype }) => {
   output.on("close", () => {
     console.error("Lost connection to server, exiting...");
     process.stdin.pause();
+    process.exit(-1)
   });
   const parser = Parser(servertype, input);
   if (interactive) {
