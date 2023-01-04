@@ -1,8 +1,6 @@
-'use strict';
+"use strict";
 
-const username = require('../username');
+const username = require("../username");
 
 module.exports =
-	'(?<user>' +
-		username +
-	') has reached the goal \\[(?<goal>.+)\\]$';
+  "(?<user>" + username + ") has reached the goal \\[(?<goal>.+)\\]$";

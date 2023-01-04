@@ -1,3 +1,3 @@
-'use strict';
+"use strict";
 
-module.exports = '(?<loglevel>.*?)\\]: ';
+module.exports = "(?<loglevel>.*?)\\]: ";

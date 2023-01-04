@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-const username = require('../username');
-const text = require('../text');
+const username = require("../username");
+const text = require("../text");
 
-module.exports = '<(?<user>' + username + ')> ' + text;
+module.exports = "(\\\[(?<secure>.*?)\\\])? <(?<user>" + username + ")> " + text;

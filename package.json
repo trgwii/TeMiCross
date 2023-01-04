@@ -1,7 +1,7 @@
 {
-  "name": "temicross",
-  "version": "2.3.6",
-  "description": "Telegram - Minecraft chat bridge",
+  "name": "temicross-remake",
+  "version": "3.0.0",
+  "description": "Telegram - Minecraft chat bridge (Remake Version)",
   "main": "index.js",
   "bin": {
     "temicross": "./cli/index.js",
@@ -16,13 +16,14 @@
     "Chat",
     "Bridge"
   ],
-  "author": "Thomas Rory Gummerson <thomas@gummerson.no> (https://trgwii.no)",
+  "author": "Yukari Chiba <i@0x7f.cc> (https://0x7f.cc)",
   "license": "Beerware",
   "dependencies": {
     "axios": "^0.19.2",
     "bracket-split": "^1.1.5",
     "iconv-lite": "^0.5.1",
     "inquirer": "^7.0.4",
+    "node-emoji": "^1.10.0",
     "ramda": "^0.26.1",
     "telegraf": "^3.36.0"
   }

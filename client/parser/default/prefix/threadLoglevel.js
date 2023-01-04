@@ -1,3 +1,3 @@
-'use strict';
+"use strict";
 
-module.exports = '\\[(?<thread>.*?)/(?<loglevel>.*?)\\]: ';
+module.exports = "\\[(?<thread>.*?)/(?<loglevel>.*?)\\]: ";

@@ -1,5 +1,5 @@
-'use strict';
+"use strict";
 
-const username = require('../username');
+const username = require("../username");
 
-module.exports = 'UUID of player (?<user>' + username + ') is (?<uuid>.+)$';
+module.exports = "UUID of player (?<user>" + username + ") is (?<uuid>.+)$";
